@@ -62,8 +62,11 @@ async function pedirValorizacion(m, datos) {
 	ok('8.4 Se explica que es referencial y no una tasación', /no constituye una tasación/.test(est) && /comparables en Ñuñoa/.test(est));
 	const vz = db('valorizaciones_consulta');
 	ok('8.5 La estimación queda registrada para el corredor (venta y arriendo)', vz.length === 2 && vz.some((x) => x.operacion === 'arriendo' && x.valor) && vz.some((x) => x.operacion === 'venta' && !x.valor));
-	await cam.goto(`${BASE}/wp-admin/admin.php?page=inmo-consultas&tipo=valorizacion`);
-	ok('8.6 La bandeja muestra la estimación junto a la solicitud', /Arriendo: \$[\d.]+ – \$[\d.]+/.test(await cam.textContent('.inmo-wrap')));
+	// Las valorizaciones web se asignan al corredor por defecto (administración).
+	const adm = await login(browser, 'admin', 'Admin.Demo.2026');
+	await adm.goto(`${BASE}/wp-admin/admin.php?page=inmo-consultas&tipo=valorizacion`);
+	await adm.screenshot({ path: `${CAP}/e5-03-bandeja.png`, fullPage: false });
+	ok('8.6 La bandeja muestra la estimación junto a la solicitud', /Arriendo: \$[\d.]+ – \$[\d.]+/.test(await adm.textContent('.inmo-wrap')));
 
 	/* 8.7 Casos sin estimación */
 	const t2 = await pedirValorizacion(m, { tipo: 'departamento', comuna: 'Ñuñoa', nombre: 'Rodrigo Valdés (ficticio)', email: 'rodrigo.valdes@example.test' });

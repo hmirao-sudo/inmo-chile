@@ -1,0 +1,97 @@
+[
+  {
+    "nombre": "6.1 La corredora da acceso al portal y obtiene el enlace personal",
+    "ok": true,
+    "detalle": "valentina.perez-2"
+  },
+  {
+    "nombre": "6.2 Crea su contraseña e ingresa al portal",
+    "ok": true,
+    "detalle": "/portal-propietario/"
+  },
+  {
+    "nombre": "6.3 No puede entrar al escritorio de WordPress (se redirige al portal)",
+    "ok": true,
+    "detalle": "/portal-propietario/"
+  },
+  {
+    "nombre": "6.4 Ve su departamento (Arrendado) y no las propiedades de otros dueños",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.5 Ve el arriendo, los pagos del mes y la liquidación transferida",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.6 Ve visitas sin datos personales de los interesados",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.7 Descarga su liquidación en PDF",
+    "ok": true,
+    "detalle": "HTTP 200"
+  },
+  {
+    "nombre": "6.8 Ve sus documentos: contrato de arriendo y liquidación",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.9 Regla: no puede descargar documentos de propiedades ajenas",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.10 Regla: solo documentos en que es parte (no fotos internas ni otros)",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.11 Escribe a su corredor y el mensaje llega al CRM con la propiedad",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.12 La corredora lo ve en su bandeja",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.13 Al revocar, la sesión se cierra y no puede volver a entrar",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.14 Una propietaria con dos propiedades ve ambas y no la de Valentina",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "6.15 Ve las ofertas de su casa (monto y estado)",
+    "ok": true,
+    "detalle": "oferta visible"
+  },
+  {
+    "nombre": "7.1 Clave inválida: se informa el mensaje de la CMF y la UF vigente no cambia",
+    "ok": true,
+    "detalle": "CMF: API key no valida (código 91)."
+  },
+  {
+    "nombre": "7.2 Se consulta el recurso «posteriores» desde el mes anterior en JSON",
+    "ok": true,
+    "detalle": "https://api.cmfchile.cl/api-sbifv3/recursos_api/uf/posteriores/2026/10?apikey=***&formato=json"
+  },
+  {
+    "nombre": "7.3 La UF vigente es la de hoy (no la del último día publicado)",
+    "ok": true,
+    "detalle": "vigente 39384.25 al 2026-11-23; publicada hasta 2026-12-09"
+  },
+  {
+    "nombre": "7.4 Un cobro que vence el día 5 del mes siguiente usa la UF exacta de ese día",
+    "ok": true,
+    "detalle": "2026-12-05: 39471.25"
+  }
+]

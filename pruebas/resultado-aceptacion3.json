@@ -77,7 +77,7 @@
   {
     "nombre": "5.15 Renta de UF 16,5 se cobra en pesos con la UF y su fuente",
     "ok": true,
-    "detalle": "651750 (UF $39.500 al 23-11-2026 (Valor de referencia ingresado manualmente (verificar en sii.cl)))"
+    "detalle": "651750 (UF $39.500 al 23-11-2026 (última UF conocida; vence el 05-11-2026) (Valor de referencia ingresado manualmente (verificar en sii.cl)))"
   },
   {
     "nombre": "5.16 Cobro con vencimiento pasado y sin pago queda Vencido",

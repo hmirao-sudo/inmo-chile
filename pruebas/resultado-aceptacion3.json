@@ -1,0 +1,107 @@
+[
+  {
+    "nombre": "5.0 Cierre ganado: el departamento queda Arrendado",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.1 El formulario trae renta, partes y garantía desde la oportunidad y el contrato",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.2 Arriendo administrado vigente",
+    "ok": true,
+    "detalle": "renta 550000.00, comisión 7.00%, próximo reajuste 2027-06-01"
+  },
+  {
+    "nombre": "5.3 Cobro de diciembre por $550.000 con vencimiento el día 5, sin duplicarse",
+    "ok": true,
+    "detalle": "{\"id\":\"1\",\"periodo\":\"2026-12\",\"vence\":\"2026-12-05\",\"monto_renta\":\"550000\",\"total\":\"550000\",\"pagado\":\"0\",\"estado\":\"pendie"
+  },
+  {
+    "nombre": "5.4 Pago de $300.000 → pago parcial",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.5 Un pago mayor al saldo se rechaza",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.6 Pago del saldo → pagado",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.7 Liquidación: $550.000 − comisión 7% ($38.500) − IVA ($7.315) − gasto ($40.000) = $464.185",
+    "ok": false,
+    "detalle": "$464.185"
+  },
+  {
+    "nombre": "5.8 Se emite la liquidación en PDF para la propietaria",
+    "ok": true,
+    "detalle": "LIQ-2026-0001"
+  },
+  {
+    "nombre": "5.9 No se puede liquidar dos veces el mismo período",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.10 La liquidación emitida queda intacta (montos y PDF)",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.11 El gasto nuevo aparece en la liquidación del mes siguiente",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.12 La liquidación queda transferida con referencia",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.13 Aviso de reajuste pendiente al llegar la fecha",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.14 IPC 2,1%: la renta pasa a $561.550 desde el cobro siguiente; diciembre no cambia",
+    "ok": true,
+    "detalle": "2026-12 550000, 2027-01 561550"
+  },
+  {
+    "nombre": "5.15 Renta de UF 16,5 se cobra en pesos con la UF y su fuente",
+    "ok": true,
+    "detalle": "651750 (UF $39.500 al 23-11-2026 (Valor de referencia ingresado manualmente (verificar en sii.cl)))"
+  },
+  {
+    "nombre": "5.16 Cobro con vencimiento pasado y sin pago queda Vencido",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.17 La morosidad lista al arrendatario con días de atraso",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.18 El panel muestra cobros vencidos y liquidaciones",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.19 Generar el período de nuevo no duplica cobros",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "5.20 Otro corredor no ve el arriendo, sus cobros ni sus liquidaciones",
+    "ok": true,
+    "detalle": "HTTP 403"
+  }
+]

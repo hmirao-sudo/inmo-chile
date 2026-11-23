@@ -36,6 +36,13 @@ class Inmo_Ajustes {
 			'email_notificaciones' => '',
 			'resultados_pagina'   => 12,
 			'respuesta_plazo'     => '1 día hábil',
+			// Administración de arriendos.
+			'admin_comision_pct'  => '7',
+			'iva_pct'             => '19',
+			'cobro_dia_generacion' => 1,
+			'uf_fuente_auto'      => 'manual',
+			'cmf_api_key'         => '',
+			'datos_pago'          => 'Transferencia a Cordillera Propiedades SpA, RUT 76.000.000-0, Banco Ejemplo, cuenta corriente 000-00000-00, pagos@example.test',
 		);
 	}
 

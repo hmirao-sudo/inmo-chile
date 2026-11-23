@@ -20,10 +20,12 @@ class Inmo_Instalador {
 		update_option( 'wp_attachment_pages_enabled', 0 ); // Sin páginas de adjunto públicas.
 		Inmo_Documentos::directorio();
 		update_option( 'inmo_db_version', INMO_DB_VERSION );
+		Inmo_Arriendos::programar();
 		flush_rewrite_rules();
 	}
 
 	public static function desactivar() {
+		wp_clear_scheduled_hook( 'inmo_diario' );
 		flush_rewrite_rules();
 	}
 
@@ -52,6 +54,7 @@ class Inmo_Instalador {
 			email varchar(190) NOT NULL DEFAULT '',
 			telefono varchar(20) NOT NULL DEFAULT '',
 			rut varchar(12) NOT NULL DEFAULT '',
+			datos_bancarios text NULL,
 			roles varchar(100) NOT NULL DEFAULT '',
 			origen varchar(40) NOT NULL DEFAULT '',
 			corredor_id bigint(20) unsigned NOT NULL DEFAULT 0,
@@ -223,6 +226,122 @@ class Inmo_Instalador {
 			PRIMARY KEY  (id),
 			KEY oportunidad_id (oportunidad_id),
 			KEY propiedad_id (propiedad_id)
+		) $cs;"
+		);
+
+		dbDelta(
+			"CREATE TABLE {$p}inmo_arriendos (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			propiedad_id bigint(20) unsigned NOT NULL,
+			oportunidad_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			emision_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			arrendatario_id bigint(20) unsigned NOT NULL,
+			beneficiario_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			renta decimal(16,2) NOT NULL,
+			moneda varchar(3) NOT NULL DEFAULT 'CLP',
+			dia_pago tinyint(3) unsigned NOT NULL DEFAULT 5,
+			fecha_inicio date NOT NULL,
+			fecha_termino date NULL,
+			reajuste varchar(20) NOT NULL DEFAULT 'sin_reajuste',
+			proximo_reajuste date NULL,
+			garantia decimal(16,2) NULL,
+			garantia_estado varchar(20) NOT NULL DEFAULT 'recibida',
+			comision_pct decimal(5,2) NOT NULL DEFAULT 0,
+			estado varchar(20) NOT NULL DEFAULT 'vigente',
+			notas text NULL,
+			creado datetime NOT NULL,
+			actualizado datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY propiedad_id (propiedad_id),
+			KEY estado (estado)
+		) $cs;"
+		);
+
+		dbDelta(
+			"CREATE TABLE {$p}inmo_cobros (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			arriendo_id bigint(20) unsigned NOT NULL,
+			periodo char(7) NOT NULL,
+			vence date NOT NULL,
+			renta_base decimal(16,2) NOT NULL,
+			moneda_base varchar(3) NOT NULL,
+			uf_valor decimal(10,2) NULL,
+			uf_fecha date NULL,
+			monto_renta int(11) NOT NULL,
+			cargos text NULL,
+			total int(11) NOT NULL,
+			pagado int(11) NOT NULL DEFAULT 0,
+			estado varchar(20) NOT NULL DEFAULT 'pendiente',
+			nota varchar(255) NOT NULL DEFAULT '',
+			liquidacion_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			creado datetime NOT NULL,
+			actualizado datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY arriendo_periodo (arriendo_id,periodo),
+			KEY estado (estado),
+			KEY periodo (periodo)
+		) $cs;"
+		);
+
+		dbDelta(
+			"CREATE TABLE {$p}inmo_pagos (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			cobro_id bigint(20) unsigned NOT NULL,
+			monto int(11) NOT NULL,
+			fecha date NOT NULL,
+			medio varchar(20) NOT NULL DEFAULT 'transferencia',
+			referencia varchar(120) NOT NULL DEFAULT '',
+			documento_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			liquidacion_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			creado datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY cobro_id (cobro_id)
+		) $cs;"
+		);
+
+		dbDelta(
+			"CREATE TABLE {$p}inmo_movimientos (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			arriendo_id bigint(20) unsigned NOT NULL,
+			fecha date NOT NULL,
+			concepto varchar(255) NOT NULL,
+			monto int(11) NOT NULL,
+			a_cargo varchar(20) NOT NULL DEFAULT 'propietario',
+			documento_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			liquidacion_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			creado datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY arriendo_id (arriendo_id)
+		) $cs;"
+		);
+
+		dbDelta(
+			"CREATE TABLE {$p}inmo_liquidaciones (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			numero varchar(30) NOT NULL,
+			arriendo_id bigint(20) unsigned NOT NULL,
+			beneficiario_id bigint(20) unsigned NOT NULL,
+			periodo char(7) NOT NULL,
+			detalle longtext NOT NULL,
+			ingresos int(11) NOT NULL,
+			comision int(11) NOT NULL,
+			iva int(11) NOT NULL,
+			gastos int(11) NOT NULL,
+			neto int(11) NOT NULL,
+			estado varchar(20) NOT NULL DEFAULT 'emitida',
+			documento_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			sha256 char(64) NOT NULL DEFAULT '',
+			pagada_fecha date NULL,
+			pagada_referencia varchar(120) NOT NULL DEFAULT '',
+			motivo_anulacion varchar(255) NOT NULL DEFAULT '',
+			user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			creado datetime NOT NULL,
+			actualizado datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY numero (numero),
+			KEY arriendo_periodo (arriendo_id,periodo)
 		) $cs;"
 		);
 

@@ -92,6 +92,19 @@ switch ( $cmd ) {
 		}
 		$out = $rows;
 		break;
+	case 'arriendo':
+		$a = Inmo_Arriendos::vigente_de_propiedad( Inmo_Propiedades::por_codigo( $argv[2] ) );
+		if ( $a ) {
+			$a->cobros = $wpdb->get_results( $wpdb->prepare( 'SELECT id, periodo, vence, monto_renta, total, pagado, estado, nota, uf_valor FROM ' . $wpdb->prefix . 'inmo_cobros WHERE arriendo_id=%d ORDER BY periodo', $a->id ) );
+			$a->liquidaciones = $wpdb->get_results( $wpdb->prepare( 'SELECT id, numero, periodo, ingresos, comision, iva, gastos, neto, estado, sha256, documento_id, detalle FROM ' . $wpdb->prefix . 'inmo_liquidaciones WHERE arriendo_id=%d ORDER BY id', $a->id ) );
+			foreach ( $a->liquidaciones as $l ) {
+				$d = Inmo_Documentos::get( $l->documento_id );
+				$l->ruta_pdf = Inmo_Documentos::ruta_absoluta( $d );
+				$l->sha_actual = $l->ruta_pdf ? hash_file( 'sha256', $l->ruta_pdf ) : '';
+			}
+		}
+		$out = $a;
+		break;
 	case 'historial':
 		$out = $wpdb->get_results( $wpdb->prepare( 'SELECT accion, detalle FROM ' . Inmo_Historial::tabla() . ' WHERE propiedad_id=%d ORDER BY id', Inmo_Propiedades::por_codigo( $argv[2] ) ) );
 		break;

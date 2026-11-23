@@ -85,11 +85,13 @@ class Inmo_Util {
 			return '';
 		}
 		$monto = (float) $monto;
+		$signo = $monto < 0 ? '-' : '';
+		$monto = abs( $monto );
 		if ( 'UF' === $moneda ) {
 			$dec = ( floor( $monto ) == $monto ) ? 0 : 2; // phpcs:ignore Universal.Operators.StrictComparisons
-			return 'UF ' . number_format( $monto, $dec, ',', '.' );
+			return $signo . 'UF ' . number_format( $monto, $dec, ',', '.' );
 		}
-		return '$' . number_format( $monto, 0, ',', '.' );
+		return $signo . '$' . number_format( round( $monto ), 0, ',', '.' );
 	}
 
 	/** Convierte un número en formato chileno ("5.200,5") o simple a float. */

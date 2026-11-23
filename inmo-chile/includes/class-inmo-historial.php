@@ -70,6 +70,13 @@ class Inmo_Historial {
 			'emision'           => 'Documento emitido',
 			'firma'             => 'Firma',
 			'plantilla'         => 'Plantilla',
+			'administracion'    => 'Administración del arriendo',
+			'cobro'             => 'Cobro',
+			'pago'              => 'Pago',
+			'reajuste_renta'    => 'Reajuste de renta',
+			'gasto'             => 'Gasto / abono',
+			'liquidacion'       => 'Liquidación',
+			'uf'                => 'Valor UF',
 		);
 		return isset( $m[ $accion ] ) ? $m[ $accion ] : ucfirst( str_replace( '_', ' ', $accion ) );
 	}

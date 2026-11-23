@@ -21,6 +21,17 @@ class Inmo_Correo {
 		return $ok;
 	}
 
+	/** Envío genérico con firma de la corredora y registro en la bitácora. */
+	public static function enviar_simple( $para, $asunto, $cuerpo, array $ref = array(), $adjuntos = array() ) {
+		if ( $adjuntos ) {
+			$marca = Inmo_Ajustes::get( 'marca_nombre' );
+			$ok    = wp_mail( $para, '[' . $marca . '] ' . $asunto, $cuerpo . "\n\n—\n" . $marca . "\n" . home_url( '/' ), '', $adjuntos );
+			Inmo_Historial::registrar( 'correo', ( $ok ? 'Correo enviado' : 'Correo NO enviado (revisar configuración SMTP)' ) . ': «' . $asunto . '»', $ref );
+			return $ok;
+		}
+		return self::enviar( $para, $asunto, $cuerpo, $ref );
+	}
+
 	public static function confirmacion_consulta( $consulta_id, array $extra = array() ) {
 		$q = Inmo_Consultas::get( $consulta_id );
 		$c = $q ? Inmo_Contactos::get( $q->contacto_id ) : null;

@@ -13,6 +13,7 @@ class Inmo_Admin_Ajustes {
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ), 30 );
 		add_action( 'admin_post_inmo_ajustes', array( __CLASS__, 'guardar' ) );
 		add_action( 'admin_post_inmo_datos_prueba', array( __CLASS__, 'datos_prueba' ) );
+		add_action( 'admin_post_inmo_actualizar_uf', array( __CLASS__, 'actualizar_uf' ) );
 	}
 
 	public static function menu() {
@@ -40,6 +41,14 @@ class Inmo_Admin_Ajustes {
 				'uf_valor'  => array( 'Valor UF en pesos', 'text' ),
 				'uf_fecha'  => array( 'Fecha del valor', 'date' ),
 				'uf_fuente' => array( 'Fuente (se muestra en el sitio)', 'text' ),
+				'uf_fuente_auto' => array( 'Actualización automática diaria', 'fuente_uf' ),
+				'cmf_api_key'    => array( 'Clave API CMF (solo si eliges la CMF)', 'text' ),
+			),
+			'Administración de arriendos' => array(
+				'admin_comision_pct'   => array( 'Comisión de administración por defecto (%)', 'text' ),
+				'iva_pct'              => array( 'IVA sobre la comisión (%)', 'text' ),
+				'cobro_dia_generacion' => array( 'Día del mes en que se generan los cobros', 'number' ),
+				'datos_pago'           => array( 'Datos para el pago (se envían al arrendatario)', 'text' ),
 			),
 			'Operación' => array(
 				'codigo_prefijo'       => array( 'Prefijo de códigos (solo letras; no cambia códigos existentes)', 'text' ),
@@ -72,6 +81,10 @@ class Inmo_Admin_Ajustes {
 							<select id="aj_<?php echo esc_attr( $k ); ?>" name="aj[<?php echo esc_attr( $k ); ?>]">
 							<?php foreach ( Inmo_Esquema::PRECISION as $pk => $pl ) : ?><option value="<?php echo esc_attr( $pk ); ?>" <?php selected( $v[ $k ], $pk ); ?>><?php echo esc_html( $pl ); ?></option><?php endforeach; ?>
 							</select>
+						<?php elseif ( 'fuente_uf' === $c[1] ) : ?>
+							<select id="aj_<?php echo esc_attr( $k ); ?>" name="aj[<?php echo esc_attr( $k ); ?>]">
+							<?php foreach ( Inmo_Indicadores::FUENTES as $fk => $fl ) : ?><option value="<?php echo esc_attr( $fk ); ?>" <?php selected( $v[ $k ], $fk ); ?>><?php echo esc_html( $fl ); ?></option><?php endforeach; ?>
+							</select>
 						<?php elseif ( 'corredor' === $c[1] ) : ?>
 							<select id="aj_<?php echo esc_attr( $k ); ?>" name="aj[<?php echo esc_attr( $k ); ?>]"><option value="0">— Primer administrador —</option>
 							<?php foreach ( Inmo_Permisos::corredores() as $u ) : ?><option value="<?php echo (int) $u->ID; ?>" <?php selected( (int) $v[ $k ], (int) $u->ID ); ?>><?php echo esc_html( $u->display_name ); ?></option><?php endforeach; ?>
@@ -85,6 +98,10 @@ class Inmo_Admin_Ajustes {
 				<?php endforeach; ?>
 				<p class="description">Al cambiar el valor UF se recalculan los precios de referencia usados para filtrar. Los precios publicados se mantienen en su moneda original.</p>
 				<?php submit_button( 'Guardar ajustes' ); ?>
+			</form>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="inmo_actualizar_uf"><?php wp_nonce_field( 'inmo_actualizar_uf' ); ?>
+				<p><button class="button">Actualizar la UF ahora desde la fuente automática</button></p>
 			</form>
 
 			<h2 id="datos-prueba">Datos de prueba</h2>
@@ -123,6 +140,9 @@ class Inmo_Admin_Ajustes {
 					case 'email':
 						$val = sanitize_email( $val );
 						break;
+					case 'fuente_uf':
+						$val = isset( Inmo_Indicadores::FUENTES[ $val ] ) ? $val : 'manual';
+						break;
 					case 'number':
 					case 'corredor':
 						$val = absint( $val );
@@ -140,8 +160,25 @@ class Inmo_Admin_Ajustes {
 		if ( isset( $nuevo['codigo_prefijo'] ) ) {
 			$nuevo['codigo_prefijo'] = strtoupper( preg_replace( '/[^A-Za-z]/', '', $nuevo['codigo_prefijo'] ) );
 		}
+		$uf_antes = Inmo_Ajustes::get( 'uf_valor' ) . '|' . Inmo_Ajustes::get( 'uf_fecha' );
 		Inmo_Ajustes::guardar( $nuevo );
+		if ( isset( $nuevo['uf_valor'], $nuevo['uf_fecha'] ) && $uf_antes !== $nuevo['uf_valor'] . '|' . $nuevo['uf_fecha'] && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $nuevo['uf_fecha'] ) ) {
+			$h                       = Inmo_Indicadores::historial();
+			$h[ $nuevo['uf_fecha'] ] = (float) $nuevo['uf_valor'];
+			update_option( Inmo_Indicadores::OPCION_HIST, $h, false );
+		}
 		Inmo_Admin::avisar( 'success', 'Ajustes guardados.' );
+		wp_safe_redirect( admin_url( 'admin.php?page=inmo-ajustes' ) );
+		exit;
+	}
+
+	public static function actualizar_uf() {
+		check_admin_referer( 'inmo_actualizar_uf' );
+		if ( ! current_user_can( 'inmo_ajustes' ) ) {
+			wp_die( 'Sin permiso.', '', array( 'response' => 403 ) );
+		}
+		$r = Inmo_Indicadores::actualizar_uf();
+		Inmo_Admin::avisar( is_wp_error( $r ) ? 'error' : 'success', is_wp_error( $r ) ? esc_html( $r->get_error_message() ) : 'UF actualizada: ' . esc_html( Inmo_Util::formatear_monto( Inmo_Ajustes::get( 'uf_valor' ), 'CLP' ) . ' al ' . Inmo_Util::fecha( Inmo_Ajustes::get( 'uf_fecha' ) ) ) );
 		wp_safe_redirect( admin_url( 'admin.php?page=inmo-ajustes' ) );
 		exit;
 	}

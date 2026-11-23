@@ -148,6 +148,9 @@ class Inmo_Contactos {
 			'preferencias' => wp_json_encode( $d['preferencias'] ),
 			'actualizado' => Inmo_Util::ahora(),
 		);
+		if ( array_key_exists( 'datos_bancarios', $d ) ) {
+			$upd['datos_bancarios'] = sanitize_textarea_field( $d['datos_bancarios'] );
+		}
 		return false !== $wpdb->update( self::tabla(), $upd, array( 'id' => (int) $id ) );
 	}
 

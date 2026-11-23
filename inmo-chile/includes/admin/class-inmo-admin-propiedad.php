@@ -415,6 +415,16 @@ class Inmo_Admin_Propiedad {
 			}
 			echo '</tbody></table>';
 		}
+		if ( 'arriendo' === Inmo_Propiedades::termino( $post->ID, Inmo_Propiedades::TAX_OPERACION ) ) {
+			$adm = Inmo_Arriendos::vigente_de_propiedad( $post->ID );
+			echo '<h3 class="inmo-subtitulo">Administración del arriendo</h3>';
+			if ( $adm ) {
+				$arr = Inmo_Contactos::get( $adm->arrendatario_id );
+				echo '<p>Vigente desde el ' . esc_html( Inmo_Util::fecha( $adm->fecha_inicio ) ) . ' · ' . esc_html( $arr ? $arr->nombre : '' ) . ' · renta ' . esc_html( Inmo_Util::formatear_monto( $adm->renta, $adm->moneda ) ) . ' · <a href="' . esc_url( Inmo_Admin_Administracion::url( $adm->id ) ) . '">Cobros y liquidaciones</a></p>';
+			} else {
+				echo '<p><a class="button" href="' . esc_url( admin_url( 'admin.php?page=inmo-arriendos&nuevo=1&propiedad=' . $post->ID ) ) . '">Iniciar administración</a> <span class="description">También desde la oportunidad ganada (trae renta, partes y contrato).</span></p>';
+			}
+		}
 		echo '<h3 class="inmo-subtitulo">Documentos emitidos</h3>';
 		echo '<p><a class="button" href="' . esc_url( admin_url( 'admin.php?page=inmo-documento&propiedad=' . $post->ID ) ) . '">Emitir mandato u otro documento de la propiedad</a> <span class="description">Contratos de arriendo, promesas, reservas y órdenes de visita se emiten desde la oportunidad.</span></p>';
 		Inmo_Admin_Oportunidades::tabla_emisiones( Inmo_Contratos::de_propiedad( $post->ID ) );

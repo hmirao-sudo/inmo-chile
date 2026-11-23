@@ -68,3 +68,13 @@ mark.inmo-falta{background:#fcf0f1;color:#8a2424;border:1px dashed #d63638;paddi
 .inmo-badge--emitido,.inmo-badge--firma-firmado{background:#d7f0dd;color:#0a5b1f}
 .inmo-badge--anulado,.inmo-badge--firma-rechazado{background:#fcf0f1;color:#8a2424}
 .inmo-badge--firma-pendiente,.inmo-badge--firma-parcial{background:#fcf3d7;color:#7a5800}
+
+/* Administración de arriendos */
+.inmo-wrap .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.inmo-badge--cobro-pagado,.inmo-badge--liq-pagada,.inmo-badge--vigente{background:#d7f0dd;color:#0a5b1f}
+.inmo-badge--cobro-pendiente,.inmo-badge--cobro-parcial,.inmo-badge--liq-emitida{background:#fcf3d7;color:#7a5800}
+.inmo-badge--cobro-vencido{background:#fcf0f1;color:#8a2424;font-weight:600}
+.inmo-badge--cobro-anulado,.inmo-badge--liq-anulada,.inmo-badge--terminado{background:#eee;color:#555}
+.inmo-liq .total td{font-weight:700;border-top:2px solid #1d2327;font-size:14px}
+.inmo-alerta-txt{color:#8a2424}
+.inmo-cobros details{margin:2px 0}.inmo-cobros summary{cursor:pointer;color:#2271b1}

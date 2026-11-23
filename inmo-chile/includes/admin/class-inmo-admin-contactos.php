@@ -132,6 +132,7 @@ class Inmo_Admin_Contactos {
 						<p><label for="p_mon">Moneda</label><select id="p_mon" name="pref[moneda]"><?php foreach ( Inmo_Esquema::MONEDAS as $k => $l ) : ?><option value="<?php echo esc_attr( $k ); ?>" <?php selected( $pref['moneda'] ?? 'UF', $k ); ?>><?php echo esc_html( $l ); ?></option><?php endforeach; ?></select></p>
 						<p><label for="p_dorm">Dormitorios mín.</label><input type="number" min="0" id="p_dorm" name="pref[dormitorios]" value="<?php echo esc_attr( $pref['dormitorios'] ?? '' ); ?>"></p>
 					</div>
+					<p><label for="c_banco">Datos bancarios para liquidaciones (privado)</label><textarea id="c_banco" name="datos_bancarios" rows="2" class="large-text" placeholder="Banco, tipo de cuenta, número, titular y RUT"><?php echo esc_textarea( $c->datos_bancarios ?? '' ); ?></textarea></p>
 					<?php if ( $c ) : ?>
 						<p class="description">Origen: <?php echo esc_html( Inmo_Contactos::ORIGENES[ $c->origen ] ?? $c->origen ); ?> · Creado: <?php echo esc_html( Inmo_Util::fecha( $c->creado, true ) ); ?> · Consentimiento: <?php echo esc_html( $c->consentimiento ? Inmo_Util::fecha( $c->consentimiento, true ) : 'no registrado' ); ?></p>
 					<?php endif; ?>
@@ -149,6 +150,19 @@ class Inmo_Admin_Contactos {
 					echo '<ul>';
 					foreach ( $props as $pid ) {
 						echo '<li><a href="' . esc_url( get_edit_post_link( $pid ) ) . '">' . esc_html( get_post_meta( $pid, '_inmo_codigo', true ) . ' — ' . get_the_title( $pid ) ) . '</a> · ' . esc_html( Inmo_Esquema::ESTADOS[ get_post_meta( $pid, '_inmo_estado', true ) ] ?? '' ) . '</li>';
+					}
+					echo '</ul>';
+				}
+				?>
+				<?php
+				$arrs = array_filter( array_merge( Inmo_Arriendos::de_beneficiario( $id ), array() ), array( 'Inmo_Arriendos', 'puede_ver' ) );
+				global $wpdb;
+				$como_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . Inmo_Arriendos::tabla() . ' WHERE arrendatario_id = %d', $id ) ); // phpcs:ignore
+				$arrs = array_merge( $arrs, array_filter( $como_arr, array( 'Inmo_Arriendos', 'puede_ver' ) ) );
+				if ( $arrs ) {
+					echo '<h2>Arriendos administrados</h2><ul>';
+					foreach ( $arrs as $ar ) {
+						echo '<li><a href="' . esc_url( Inmo_Admin_Administracion::url( $ar->id ) ) . '">' . esc_html( get_post_meta( $ar->propiedad_id, '_inmo_codigo', true ) . ' — ' . ( (int) $ar->beneficiario_id === $id ? 'como propietario' : 'como arrendatario' ) . ' (' . Inmo_Arriendos::ESTADOS[ $ar->estado ] . ')' ) . '</a></li>';
 					}
 					echo '</ul>';
 				}
@@ -317,6 +331,7 @@ class Inmo_Admin_Contactos {
 			'roles'        => isset( $_POST['roles'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['roles'] ) ) : array(),
 			'corredor_id'  => Inmo_Permisos::ve_todo() ? absint( Inmo_Util::post( 'corredor_id' ) ) : ( $id ? (int) Inmo_Contactos::get( $id )->corredor_id : get_current_user_id() ),
 			'preferencias' => $pref,
+			'datos_bancarios' => Inmo_Util::post_textarea( 'datos_bancarios' ),
 		);
 		if ( $id ) {
 			Inmo_Contactos::actualizar( $id, $datos );

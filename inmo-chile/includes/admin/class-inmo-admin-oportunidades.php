@@ -284,6 +284,15 @@ class Inmo_Admin_Oportunidades {
 				</section>
 
 				<section class="inmo-caja">
+					<?php if ( $pid && 'arriendo' === $o->operacion && in_array( $o->etapa, array( 'contrato', 'ganada' ), true ) ) : ?>
+						<?php $adm = Inmo_Arriendos::vigente_de_propiedad( $pid ); ?>
+						<h2>Administración del arriendo</h2>
+						<?php if ( $adm ) : ?>
+							<p><a class="button" href="<?php echo esc_url( Inmo_Admin_Administracion::url( $adm->id ) ); ?>">Ver arriendo administrado</a></p>
+						<?php else : ?>
+							<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=inmo-arriendos&nuevo=1&oportunidad=' . $id ) ); ?>">Iniciar administración</a> <span class="description">Cobranza mensual y liquidaciones al propietario.</span></p>
+						<?php endif; ?>
+					<?php endif; ?>
 					<h2>Documentos</h2>
 					<?php if ( $pid ) : ?>
 						<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=inmo-documento&oportunidad=' . $id ) ); ?>">Preparar documento</a></p>

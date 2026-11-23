@@ -1,0 +1,67 @@
+[
+  {
+    "nombre": "8.1 Importa el CSV y reporta las filas inválidas con su número",
+    "ok": true,
+    "detalle": "13 comparable(s) importado(s).Fila 15: Dato no válido: comuna.Fila 16: Dato no válido: moneda (UF o CLP).Descartar este aviso."
+  },
+  {
+    "nombre": "8.2 Ve un rango de arriendo estimado para 60 m² en Ñuñoa (≈ $10.000/m²)",
+    "ok": true,
+    "detalle": "595000 – 605000"
+  },
+  {
+    "nombre": "8.3 Sin comparables de venta suficientes no inventa un valor de venta",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "8.4 Se explica que es referencial y no una tasación",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "8.5 La estimación queda registrada para el corredor (venta y arriendo)",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "8.6 La bandeja muestra la estimación junto a la solicitud",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "8.7 Sin superficie: no hay rango y se pide la superficie",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "8.8 Sin datos suficientes (local en Tiltil): no hay rango, contacto del corredor",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "8.9 Casa de 170 m² en La Reina: rango coherente con ≈ UF 29–31/m²",
+    "ok": true,
+    "detalle": "4990 – 5100"
+  },
+  {
+    "nombre": "8.10 Usa el cierre propio (CP-0001 vendida) además del mercado",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "8.11 Los comparables de más de 24 meses no se usan",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "8.12 La ficha muestra rango, confianza y la comparación con el precio publicado",
+    "ok": true,
+    "detalle": " Valorización automática Mover arriba Mover arriba Mover abajo Mover abajo Mostrar u ocultar el panel Mostrar u ocultar el panel $675.000 – $685.000Va"
+  },
+  {
+    "nombre": "8.13 Con la opción desactivada el propietario no ve el rango, pero el corredor sí",
+    "ok": true,
+    "detalle": ""
+  }
+]

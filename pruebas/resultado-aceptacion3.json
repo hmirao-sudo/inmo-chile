@@ -36,7 +36,7 @@
   },
   {
     "nombre": "5.7 Liquidación: $550.000 − comisión 7% ($38.500) − IVA ($7.315) − gasto ($40.000) = $464.185",
-    "ok": false,
+    "ok": true,
     "detalle": "$464.185"
   },
   {

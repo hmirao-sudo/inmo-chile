@@ -233,6 +233,51 @@ class Inmo_Instalador {
 		);
 
 		dbDelta(
+			"CREATE TABLE {$p}inmo_comparables (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			fecha date NOT NULL,
+			tipo varchar(20) NOT NULL,
+			operacion varchar(20) NOT NULL,
+			comuna_id bigint(20) unsigned NOT NULL,
+			superficie decimal(10,2) NOT NULL,
+			dormitorios tinyint(3) unsigned NULL,
+			banos tinyint(3) unsigned NULL,
+			estacionamientos tinyint(3) unsigned NULL,
+			precio decimal(16,2) NOT NULL,
+			moneda varchar(3) NOT NULL,
+			es_cierre tinyint(1) NOT NULL DEFAULT 0,
+			fuente varchar(120) NOT NULL DEFAULT '',
+			url varchar(255) NOT NULL DEFAULT '',
+			user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			creado datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY busqueda (tipo,operacion,comuna_id)
+		) $cs;"
+		);
+
+		dbDelta(
+			"CREATE TABLE {$p}inmo_valorizaciones (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			propiedad_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			consulta_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			operacion varchar(20) NOT NULL DEFAULT '',
+			valor decimal(16,2) NULL,
+			minimo decimal(16,2) NULL,
+			maximo decimal(16,2) NULL,
+			moneda varchar(3) NOT NULL DEFAULT '',
+			confianza varchar(10) NOT NULL DEFAULT '',
+			n int(10) unsigned NOT NULL DEFAULT 0,
+			entrada longtext NULL,
+			resultado longtext NULL,
+			user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			creado datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY propiedad_id (propiedad_id),
+			KEY consulta_id (consulta_id)
+		) $cs;"
+		);
+
+		dbDelta(
 			"CREATE TABLE {$p}inmo_arriendos (
 			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			propiedad_id bigint(20) unsigned NOT NULL,

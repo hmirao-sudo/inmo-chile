@@ -50,6 +50,14 @@ class Inmo_Admin_Ajustes {
 				'cobro_dia_generacion' => array( 'Día del mes en que se generan los cobros', 'number' ),
 				'datos_pago'           => array( 'Datos para el pago (se envían al arrendatario)', 'text' ),
 			),
+			'Valorización automática' => array(
+				'valorizacion_publica'   => array( 'Mostrar el rango estimado al propietario que la pide en la web (1 = sí, 0 = solo uso interno)', 'number' ),
+				'valorizacion_min'       => array( 'Mínimo de comparables para estimar', 'number' ),
+				'valorizacion_meses'     => array( 'Antigüedad máxima de los comparables (meses)', 'number' ),
+				'valorizacion_descuento' => array( 'Descuento de negociación sobre precios publicados (%)', 'text' ),
+				'ajuste_estac_venta'     => array( 'Valor por estacionamiento en venta (UF)', 'text' ),
+				'ajuste_estac_arriendo'  => array( 'Valor por estacionamiento en arriendo ($/mes)', 'text' ),
+			),
 			'Operación' => array(
 				'codigo_prefijo'       => array( 'Prefijo de códigos (solo letras; no cambia códigos existentes)', 'text' ),
 				'precision_defecto'    => array( 'Precisión de ubicación por defecto', 'precision' ),

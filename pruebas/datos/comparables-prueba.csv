@@ -1,0 +1,16 @@
+fecha;tipo;operacion;comuna;superficie;dormitorios;banos;estacionamientos;precio;moneda;es_cierre;fuente;url
+2026-06-10;departamento;arriendo;Ñuñoa;50;2;1;0;505000;CLP;si;Datos de prueba (ficticios);
+2026-07-02;departamento;arriendo;Ñuñoa;58;2;2;1;575000;CLP;si;Datos de prueba (ficticios);
+2026-07-20;departamento;arriendo;nunoa;62;2;2;1;625000;CLP;si;Datos de prueba (ficticios);
+2026-08-05;departamento;arriendo;Ñuñoa;66;3;2;1;650000;CLP;si;Datos de prueba (ficticios);
+2026-08-28;departamento;arriendo;Ñuñoa;70;3;2;1;712000;CLP;si;Datos de prueba (ficticios);
+2026-09-15;departamento;arriendo;Ñuñoa;55;2;1;0;548000;CLP;si;Datos de prueba (ficticios);
+2026-10-01;departamento;arriendo;Ñuñoa;60;2;2;1;14,9;UF;si;Datos de prueba (ficticios);
+2026-10-20;departamento;arriendo;Ñuñoa;64;2;2;1;640000;CLP;si;Datos de prueba (ficticios);
+2023-01-10;departamento;arriendo;Ñuñoa;60;2;2;1;5900000;CLP;si;Dato antiguo (debe excluirse);
+2026-05-12;casa;venta;La Reina;160;4;3;2;4850;UF;si;Datos de prueba (ficticios);
+2026-06-30;casa;venta;La Reina;175;4;3;2;5300;UF;no;Datos de prueba (ficticios);
+2026-08-14;casa;venta;La Reina;190;4;3;2;5650;UF;si;Datos de prueba (ficticios);
+2026-09-09;casa;venta;La Reina;150;3;2;2;4500;UF;si;Datos de prueba (ficticios);
+2026-10-03;casa;venta;Comuna Inexistente;150;3;2;2;4500;UF;si;Fila inválida;
+2026-10-03;casa;venta;La Reina;150;3;2;2;4500;USD;si;Fila inválida;

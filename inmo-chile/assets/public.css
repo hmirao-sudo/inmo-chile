@@ -25,3 +25,8 @@
 .inmo-tabs [role=tab][aria-selected=true]{border-bottom-color:currentColor;font-weight:700}
 .inmo-nota{font-size:.92em;color:#444;margin:0}
 .inmo-panel-titulo{margin:0 0 6px;font-size:1.1em}
+.inmo-estimacion{background:#fff;border:1px solid #2e7d32;border-radius:8px;padding:10px 14px;margin-top:8px}
+.inmo-estimacion dl{display:grid;gap:10px;margin:6px 0}
+.inmo-estimacion dt{font-weight:600}
+.inmo-estimacion dd{margin:0;font-size:1.25em;font-weight:700}
+.inmo-estimacion dd.inmo-ayuda{font-size:.9em;font-weight:400}

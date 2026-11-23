@@ -153,6 +153,18 @@ switch ( $cmd ) {
 			'vencimiento' => $vto,
 		);
 		break;
+	case 'reset_limite':
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\\_transient%inmo\\_rl\\_%'" );
+		$out = array( 'ok' => true );
+		break;
+	case 'ajuste':
+		Inmo_Ajustes::guardar( array( $argv[2] => $argv[3] ) );
+		$out = array( $argv[2] => Inmo_Ajustes::get( $argv[2] ) );
+		break;
+	case 'valorizaciones_consulta':
+		$q   = $wpdb->get_var( "SELECT id FROM {$wpdb->prefix}inmo_consultas WHERE tipo='valorizacion' ORDER BY id DESC LIMIT 1" );
+		$out = $wpdb->get_results( $wpdb->prepare( "SELECT operacion, valor, minimo, maximo, moneda, confianza, n FROM {$wpdb->prefix}inmo_valorizaciones WHERE consulta_id=%d ORDER BY id", $q ) );
+		break;
 	case 'historial':
 		$out = $wpdb->get_results( $wpdb->prepare( 'SELECT accion, detalle FROM ' . Inmo_Historial::tabla() . ' WHERE propiedad_id=%d ORDER BY id', Inmo_Propiedades::por_codigo( $argv[2] ) ) );
 		break;

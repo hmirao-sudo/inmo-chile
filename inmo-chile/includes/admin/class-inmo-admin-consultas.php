@@ -115,6 +115,13 @@ class Inmo_Admin_Consultas {
 									<br><span class="description">Prefiere: <?php echo esc_html( Inmo_Util::fecha( $q->datos['fecha_preferida'] ?? '' ) . ' · ' . ( Inmo_Consultas::FRANJAS[ $q->datos['franja'] ?? '' ] ?? '' ) ); ?></span>
 									<?php if ( $q->visita_fecha ) : ?><br><strong>Cita: <?php echo esc_html( Inmo_Util::fecha( $q->visita_fecha, true ) ); ?></strong><?php endif; ?>
 								<?php endif; ?>
+								<?php if ( 'valorizacion' === $q->tipo ) : ?>
+									<?php foreach ( Inmo_Valorizacion::de_consulta( $q->id ) as $vz ) : ?>
+										<br><span class="description inmo-val-consulta"><?php echo esc_html( ( 'venta' === $vz->operacion ? 'Venta' : 'Arriendo' ) . ': ' . ( null !== $vz->valor ? Inmo_Util::formatear_monto( $vz->minimo, $vz->moneda ) . ' – ' . Inmo_Util::formatear_monto( $vz->maximo, $vz->moneda ) . ' (confianza ' . $vz->confianza . ', ' . $vz->n . ' comparables)' : 'sin datos suficientes' ) ); ?></span>
+									<?php endforeach; ?>
+									<?php $dz = $q->datos; ?>
+									<br><span class="description"><?php echo esc_html( trim( ( Inmo_Esquema::TIPOS[ $dz['tipo'] ?? '' ] ?? '' ) . ' en ' . ( $dz['comuna'] ?? '' ) . ( ! empty( $dz['superficie'] ) ? ', ' . $dz['superficie'] . ' m²' : '' ) . ( ! empty( $dz['dormitorios'] ) ? ', ' . $dz['dormitorios'] . ' dorm.' : '' ) ) ); ?></span>
+								<?php endif; ?>
 								<?php if ( ! empty( $q->datos['busqueda'] ) ) : ?>
 									<br><span class="description">Búsqueda: <?php echo esc_html( http_build_query( $q->datos['busqueda'], '', ', ' ) ); ?></span>
 								<?php endif; ?>

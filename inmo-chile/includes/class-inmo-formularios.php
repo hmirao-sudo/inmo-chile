@@ -274,12 +274,30 @@ class Inmo_Formularios {
 		);
 
 		if ( 'valorizar' === $accion ) {
-			$qid = Inmo_Consultas::crear( array( 'tipo' => 'valorizacion', 'contacto_id' => $contacto, 'mensaje' => $v['mensaje'], 'datos' => $resumen, 'origen' => 'web', 'consentimiento' => true ) );
+			$qid   = Inmo_Consultas::crear( array( 'tipo' => 'valorizacion', 'contacto_id' => $contacto, 'mensaje' => $v['mensaje'], 'datos' => $resumen, 'origen' => 'web', 'consentimiento' => true ) );
+			$est   = array();
+			$entr  = array( 'tipo' => $v['tipo'], 'comuna_id' => $comuna->term_id, 'superficie' => Inmo_Util::parse_numero( $v['superficie'] ), 'dormitorios' => $v['dormitorios'] );
+			if ( '' !== $entr['superficie'] && $entr['superficie'] > 0 ) {
+				foreach ( array( 'venta', 'arriendo' ) as $op_v ) {
+					$r = Inmo_Valorizacion::estimar( array_merge( $entr, array( 'operacion' => $op_v ) ) );
+					Inmo_Valorizacion::registrar( $r, 0, $qid, $entr );
+					if ( $r['suficiente'] && 'baja' !== $r['confianza'] ) {
+						$est[ $op_v ] = $r;
+					}
+				}
+			}
 			Inmo_Correo::confirmacion_consulta( $qid );
-			self::volver(
-				'propietario',
-				array( 'ok' => array( 'mensaje' => 'Recibimos tu solicitud de valorización. Un corredor te contactará dentro de ' . Inmo_Ajustes::get( 'respuesta_plazo' ) . ' para coordinar una visita y entregarte una estimación de valor.' ) )
-			);
+			$plazo = Inmo_Ajustes::get( 'respuesta_plazo' );
+			$ok    = array( 'mensaje' => 'Recibimos tu solicitud de valorización. Un corredor te contactará dentro de ' . $plazo . ' para coordinar una visita y entregarte una valorización profesional.' );
+			if ( $est && (int) Inmo_Ajustes::get( 'valorizacion_publica', 1 ) ) {
+				$ok['estimacion'] = array();
+				foreach ( $est as $op_v => $r ) {
+					$ok['estimacion'][] = array( 'etiqueta' => 'venta' === $op_v ? 'Valor de venta estimado' : 'Arriendo mensual estimado', 'rango' => Inmo_Valorizacion::texto_rango( $r ), 'n' => $r['n'], 'ambito' => $r['ambito'], 'confianza' => Inmo_Valorizacion::CONFIANZA[ $r['confianza'] ] );
+				}
+			} elseif ( '' === $entr['superficie'] ) {
+				$ok['mensaje'] .= ' Si nos indicas la superficie aproximada, podremos darte de inmediato un rango referencial.';
+			}
+			self::volver( 'propietario', array( 'ok' => $ok ) );
 		}
 
 		$op  = 'arrendar' === $accion ? 'arriendo' : 'venta';
@@ -484,6 +502,13 @@ class Inmo_Formularios {
 
 	private static function exito( array $ok ) {
 		$h = '<div class="inmo-alerta inmo-alerta--ok" role="status" tabindex="-1" data-inmo-foco><p>' . esc_html( $ok['mensaje'] ) . '</p>';
+		if ( ! empty( $ok['estimacion'] ) ) {
+			$h .= '<div class="inmo-estimacion" id="inmo-estimacion"><p><strong>Estimación referencial automática</strong></p><dl>';
+			foreach ( $ok['estimacion'] as $e ) {
+				$h .= '<div><dt>' . esc_html( $e['etiqueta'] ) . '</dt><dd>' . esc_html( $e['rango'] ) . '</dd><dd class="inmo-ayuda">' . esc_html( 'Basada en ' . $e['n'] . ' propiedades comparables en ' . $e['ambito'] . ' · confianza ' . strtolower( $e['confianza'] ) ) . '</dd></div>';
+			}
+			$h .= '</dl><p class="inmo-ayuda">Es un cálculo estadístico con propiedades similares, sin visitar tu propiedad: no considera su estado, terminaciones, vista ni orientación, y no constituye una tasación. Tu corredor la ajustará en la visita.</p></div>';
+		}
 		if ( ! empty( $ok['invitacion_url'] ) ) {
 			$h .= '<p>¿Tienes las fotos a mano? Puedes agregar características y fotos ahora mismo con tu enlace personal (válido hasta el ' . esc_html( Inmo_Util::fecha( $ok['invitacion_vence'] ) ) . '). También te lo enviamos por correo.</p>';
 			$h .= '<p><a class="inmo-boton" href="' . esc_url( $ok['invitacion_url'] ) . '">Completar características y fotos</a></p>';

@@ -42,6 +42,13 @@ class Inmo_Ajustes {
 			'cobro_dia_generacion' => 1,
 			'uf_fuente_auto'      => 'manual',
 			'cmf_api_key'         => '',
+			// Valorización automática.
+			'valorizacion_publica'   => 1,
+			'valorizacion_min'       => 3,
+			'valorizacion_meses'     => 24,
+			'valorizacion_descuento' => '3',
+			'ajuste_estac_venta'     => '300',
+			'ajuste_estac_arriendo'  => '30000',
 			'datos_pago'          => 'Transferencia a Cordillera Propiedades SpA, RUT 76.000.000-0, Banco Ejemplo, cuenta corriente 000-00000-00, pagos@example.test',
 		);
 	}

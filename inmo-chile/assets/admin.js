@@ -60,6 +60,13 @@
 		frame.open();
 	});
 
+	// La ficha usa sus propios botones (no los de #submitpost): al enviar, quitar el aviso
+	// «¿Salir del sitio?» de WordPress, que de otro modo cancela el guardado.
+	$(document).on('submit', 'form#post', function () {
+		$(window).off('beforeunload.edit-post');
+		if (window.wp && wp.autosave && wp.autosave.server) { wp.autosave.server.suspend(); }
+	});
+
 	// Copiar enlace de invitación.
 	$(document).on('click', '[data-inmo-copiar]', function () {
 		var $i = $(this).prevAll('input').first();

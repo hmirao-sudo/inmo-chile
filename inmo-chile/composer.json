@@ -1,0 +1,13 @@
+{
+  "name": "inmo-chile/plugin",
+  "description": "Dependencias del plugin Inmo Chile",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=7.4",
+    "dompdf/dompdf": "^3.0"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "platform": { "php": "7.4.33" }
+  }
+}

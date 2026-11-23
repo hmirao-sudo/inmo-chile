@@ -8,6 +8,14 @@ const BASE = 'http://localhost:8080';
 const CAP = path.join(__dirname, 'capturas');
 const FOTOS = path.join(__dirname, 'fotos');
 const resultados = [];
+// Si WordPress avisa que otra persona edita la ficha, tomar el control (comportamiento normal de WP).
+async function tomarControl(pg) {
+	const d = pg.locator('#post-lock-dialog a[href*="get-post-lock"]');
+	if (await d.count() && await d.isVisible()) {
+		await Promise.all([pg.waitForNavigation(), d.click()]);
+	}
+}
+
 
 function db(...args) {
 	return JSON.parse(execFileSync('php', [path.join(__dirname, 'consulta.php'), ...args], { encoding: 'utf8' }));
@@ -100,6 +108,7 @@ const esperaHumana = (p) => p.waitForTimeout(2100);
 	// Administración revisa, autoriza fotos, asigna corredora, registra mandato y aprueba.
 	const adm = await login(browser, 'admin', 'Admin.Demo.2026');
 	await adm.p.goto(`${BASE}/wp-admin/post.php?post=${prop.id}&action=edit`);
+	await tomarControl(adm.p);
 	await adm.p.screenshot({ path: `${CAP}/d-03-ficha-interna-revision.png`, fullPage: true });
 	for (const cb of await adm.p.locator('input[name="inmo_autorizar_foto[]"]').all()) {
 		await cb.check();
@@ -154,6 +163,7 @@ const esperaHumana = (p) => p.waitForTimeout(2100);
 	ok('1.17 Endpoint de descarga: la corredora responsable obtiene el PDF', dCam.http === 200 && dCam.es_pdf, JSON.stringify(dCam));
 	// Además, el enlace visible en su ficha interna funciona.
 	await cam.p.goto(`${BASE}/wp-admin/post.php?post=${prop.id}&action=edit`);
+	await tomarControl(cam.p);
 	const hrefUI = await cam.p.getAttribute('#inmo_captacion a[href*="action=inmo_documento"]', 'href');
 	const rUI = await cam.p.request.get(hrefUI);
 	ok('1.17b El enlace del mandato en la ficha interna de la corredora descarga el PDF', rUI.status() === 200, `HTTP ${rUI.status()}`);
@@ -161,6 +171,7 @@ const esperaHumana = (p) => p.waitForTimeout(2100);
 	const dDie = db('descargar_como', mandato.id, 'diego.munoz');
 	ok('1.18 Endpoint de descarga: otro corredor recibe 403 aun con un nonce válido', dDie.http === 403, JSON.stringify(dDie));
 	const rEdit = await die.p.goto(`${BASE}/wp-admin/post.php?post=${prop.id}&action=edit`);
+	await tomarControl(die.p);
 	ok('1.19 Otro corredor no puede abrir la ficha interna', rEdit.status() >= 400 && /not allowed|no tienes permiso/i.test(await die.p.content()), `HTTP ${rEdit.status()} (mensaje de WordPress)`);
 	const anon = await browser.newContext();
 	const rAnon = await (await anon.newPage()).request.get(hrefUI, { maxRedirects: 0 });
@@ -220,6 +231,7 @@ const esperaHumana = (p) => p.waitForTimeout(2100);
 	// Confirmar y reprogramar la visita desde la ficha interna.
 	const visita = crm.consultas.find((q) => q.tipo === 'visita');
 	await cam.p.goto(`${BASE}/wp-admin/post.php?post=${prop.id}&action=edit`);
+	await tomarControl(cam.p);
 	await cam.p.selectOption(`select[name="inmo_q[${visita.id}][estado]"]`, 'confirmada');
 	await cam.p.fill(`input[name="inmo_q[${visita.id}][fecha]"]`, `${fecha(3)}T17:30`);
 	await Promise.all([cam.p.waitForNavigation(), cam.p.click(`button[name=inmo_q_aplicar][value="${visita.id}"]`)]);

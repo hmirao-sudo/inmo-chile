@@ -22,6 +22,7 @@ class Inmo_Historial {
 				'propiedad_id' => isset( $ref['propiedad_id'] ) ? (int) $ref['propiedad_id'] : 0,
 				'contacto_id'  => isset( $ref['contacto_id'] ) ? (int) $ref['contacto_id'] : 0,
 				'consulta_id'  => isset( $ref['consulta_id'] ) ? (int) $ref['consulta_id'] : 0,
+				'oportunidad_id' => isset( $ref['oportunidad_id'] ) ? (int) $ref['oportunidad_id'] : 0,
 				'user_id'      => get_current_user_id(),
 				'accion'       => substr( sanitize_key( $accion ), 0, 40 ),
 				'detalle'      => wp_strip_all_tags( (string) $detalle ),
@@ -33,7 +34,7 @@ class Inmo_Historial {
 
 	public static function de( $campo, $id, $limite = 50 ) {
 		global $wpdb;
-		$campo = in_array( $campo, array( 'propiedad_id', 'contacto_id', 'consulta_id' ), true ) ? $campo : 'propiedad_id';
+		$campo = in_array( $campo, array( 'propiedad_id', 'contacto_id', 'consulta_id', 'oportunidad_id' ), true ) ? $campo : 'propiedad_id';
 		return $wpdb->get_results(
 			$wpdb->prepare( 'SELECT * FROM ' . self::tabla() . " WHERE {$campo} = %d ORDER BY id DESC LIMIT %d", $id, $limite ) // phpcs:ignore
 		);
@@ -61,6 +62,14 @@ class Inmo_Historial {
 			'titular'           => 'Titular',
 			'valorizacion'      => 'Solicitud de valorización',
 			'busqueda'          => 'Búsqueda sin resultados',
+			'oportunidad'       => 'Oportunidad',
+			'etapa'             => 'Cambio de etapa',
+			'oferta'            => 'Oferta',
+			'reserva'           => 'Reserva',
+			'cierre'            => 'Cierre',
+			'emision'           => 'Documento emitido',
+			'firma'             => 'Firma',
+			'plantilla'         => 'Plantilla',
 		);
 		return isset( $m[ $accion ] ) ? $m[ $accion ] : ucfirst( str_replace( '_', ' ', $accion ) );
 	}

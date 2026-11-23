@@ -1,0 +1,117 @@
+[
+  {
+    "nombre": "3.0 La consulta y la visita de la prueba 2 generaron una oportunidad de arriendo",
+    "ok": true,
+    "detalle": "#1 etapa visita"
+  },
+  {
+    "nombre": "3.1 El tablero muestra la oportunidad en su etapa",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.2 La vista previa trae renta, garantía y partes correctas",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.3 Señala los datos obligatorios que faltan",
+    "ok": true,
+    "detalle": "No se puede emitir todavía. Falta:RUT del arrendadorRUT del arrendatarioCompleta estos datos en la ficha del contacto, la ficha de la propie"
+  },
+  {
+    "nombre": "3.4 El botón Emitir está deshabilitado",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.5 Un dato obligatorio faltante impide emitir (validado en el servidor)",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.6 Con los datos completos se habilita la emisión",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.7 Se genera el PDF con número, renta, garantía y partes",
+    "ok": true,
+    "detalle": "ARR-2026-0001"
+  },
+  {
+    "nombre": "3.8 El PDF queda en el expediente, íntegro y con firma pendiente",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.9 La oportunidad avanza a «Contrato / promesa»",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.10 La plantilla editada sube de versión",
+    "ok": true,
+    "detalle": "v4 → v5"
+  },
+  {
+    "nombre": "3.11 El documento ya emitido queda intacto",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.12 Una nueva vista previa usa la versión nueva",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.13 Firma del arrendador → firmado parcialmente",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.14 Firmado por todas las partes sin cerrar la operación",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "4.1 El sitio muestra el nuevo precio en el mismo aviso (misma URL y código)",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "4.2 El historial registra el cambio de precio",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "4.3 Oferta aceptada y reserva: la propiedad queda Reservada en el sitio",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "4.4 Al cerrar la venta la propiedad queda Vendida y sale del sitio",
+    "ok": true,
+    "detalle": "vendida, HTTP 404"
+  },
+  {
+    "nombre": "4.5 Las demás oportunidades de la casa se cierran como perdidas con motivo",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "4.6 El precio acordado es la oferta aceptada (UF 5.050)",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.15 El expediente de la propiedad lista el contrato emitido",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "3.16 Otro corredor no ve la oportunidad ni el contrato",
+    "ok": true,
+    "detalle": "403 / 403"
+  }
+]

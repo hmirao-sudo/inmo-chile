@@ -47,7 +47,7 @@
   {
     "nombre": "1.10 Tras aprobarse queda Disponible y publicada",
     "ok": true,
-    "detalle": "Propiedad Disponible y publicada en el sitio. Ver ficha pública Post updated. Connection lost. Saving has been disabled "
+    "detalle": "Propiedad Disponible y publicada en el sitio. Ver ficha públicaDescartar este aviso. Entrada actualizada.Descartar este "
   },
   {
     "nombre": "1.11 Solo las fotos autorizadas pasan a la galería",
@@ -97,7 +97,7 @@
   {
     "nombre": "1.19 Otro corredor no puede abrir la ficha interna",
     "ok": true,
-    "detalle": "HTTP 500 (mensaje de WordPress)"
+    "detalle": "HTTP 403 (mensaje de WordPress)"
   },
   {
     "nombre": "1.20 Visitante sin sesión no obtiene el mandato",

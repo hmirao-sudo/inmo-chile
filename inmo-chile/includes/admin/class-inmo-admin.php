@@ -90,6 +90,7 @@ class Inmo_Admin {
 				<a class="inmo-kpi" href="<?php echo esc_url( admin_url( 'admin.php?page=inmo-consultas&tipo=visita&estado=pendiente' ) ); ?>"><strong><?php echo (int) Inmo_Consultas::contar( 'visita', array( 'pendiente' ) ); ?></strong> visitas por confirmar</a>
 				<a class="inmo-kpi" href="<?php echo esc_url( admin_url( 'admin.php?page=inmo-consultas&estado=nueva' ) ); ?>"><strong><?php echo (int) ( Inmo_Consultas::contar( 'consulta', array( 'nueva' ) ) + Inmo_Consultas::contar( 'general', array( 'nueva' ) ) + Inmo_Consultas::contar( 'captacion', array( 'nueva' ) ) + Inmo_Consultas::contar( 'valorizacion', array( 'nueva' ) ) ); ?></strong> consultas nuevas</a>
 				<span class="inmo-kpi"><strong><?php echo count( $por_vencer ); ?></strong> captaciones vencen en 30 días</span>
+				<a class="inmo-kpi" href="<?php echo esc_url( admin_url( 'admin.php?page=inmo-oportunidades' ) ); ?>"><strong><?php echo count( Inmo_Oportunidades::listar( array( 'incluir_cerradas' => false ) ) ); ?></strong> oportunidades abiertas</a>
 			</div>
 
 			<div class="inmo-columnas">

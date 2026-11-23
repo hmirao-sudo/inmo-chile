@@ -84,6 +84,12 @@ class Inmo_Consultas {
 			)
 		);
 		$id = (int) $wpdb->insert_id;
+		if ( $id && in_array( $tipo, array( 'consulta', 'visita', 'general' ), true ) ) {
+			$op_id = ! empty( $d['oportunidad_id'] ) ? (int) $d['oportunidad_id'] : Inmo_Oportunidades::para_consulta( (int) $d['contacto_id'], $prop, $tipo, $corredor );
+			if ( $op_id ) {
+				$wpdb->update( self::tabla(), array( 'oportunidad_id' => $op_id ), array( 'id' => $id ) );
+			}
+		}
 		if ( $id ) {
 			$acciones = array(
 				'visita'       => 'visita_solicitada',
@@ -150,6 +156,9 @@ class Inmo_Consultas {
 		}
 		Inmo_Historial::registrar( $accion, $detalle, array( 'propiedad_id' => $c->propiedad_id, 'contacto_id' => $c->contacto_id, 'consulta_id' => $c->id ) );
 
+		if ( 'visita' === $c->tipo && $c->oportunidad_id && in_array( $estado, array( 'confirmada', 'realizada' ), true ) ) {
+			Inmo_Oportunidades::avanzar_a( $c->oportunidad_id, 'visita' );
+		}
 		if ( 'visita' === $c->tipo && in_array( $estado, array( 'confirmada', 'reprogramada', 'cancelada' ), true ) ) {
 			Inmo_Correo::aviso_visita( self::get( $id ), $nota );
 		}
@@ -167,6 +176,11 @@ class Inmo_Consultas {
 		}
 		$sql .= ' ORDER BY q.id DESC';
 		return $wpdb->get_results( $wpdb->prepare( $sql, $params ) ); // phpcs:ignore
+	}
+
+	public static function de_oportunidad( $oportunidad_id ) {
+		global $wpdb;
+		return $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . self::tabla() . ' WHERE oportunidad_id = %d ORDER BY id DESC', $oportunidad_id ) ); // phpcs:ignore
 	}
 
 	public static function de_contacto( $contacto_id ) {

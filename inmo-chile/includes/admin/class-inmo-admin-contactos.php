@@ -188,6 +188,30 @@ class Inmo_Admin_Contactos {
 				</form>
 			</section>
 			<section class="inmo-caja">
+				<h2>Oportunidades</h2>
+				<?php
+				$ops = array_filter( Inmo_Oportunidades::de_contacto( $id ), array( 'Inmo_Oportunidades', 'puede_ver' ) );
+				if ( $ops ) {
+					echo '<ul>';
+					foreach ( $ops as $o ) {
+						echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=inmo-oportunidades&id=' . $o->id ) ) . '">' . esc_html( ( $o->propiedad_id ? get_post_meta( $o->propiedad_id, '_inmo_codigo', true ) : 'Búsqueda general' ) . ' — ' . Inmo_Oportunidades::ETAPAS[ $o->etapa ] ) . '</a></li>';
+					}
+					echo '</ul>';
+				} else {
+					echo '<p>Sin oportunidades.</p>';
+				}
+				?>
+				<details><summary>Nueva oportunidad</summary>
+					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+						<input type="hidden" name="action" value="inmo_oportunidad"><input type="hidden" name="accion" value="nueva"><input type="hidden" name="id" value="0"><input type="hidden" name="contacto_id" value="<?php echo (int) $id; ?>">
+						<?php wp_nonce_field( 'inmo_op_0' ); ?>
+						<p><label for="no_cod">Código de propiedad (opcional)</label><input type="text" id="no_cod" name="codigo" placeholder="CP-0001"></p>
+						<p><label for="no_op">Operación (si no hay propiedad)</label><select id="no_op" name="operacion"><option value="">—</option><?php foreach ( Inmo_Esquema::OPERACIONES as $k => $l ) : ?><option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $l ); ?></option><?php endforeach; ?></select></p>
+						<p><button class="button">Crear oportunidad</button></p>
+					</form>
+				</details>
+			</section>
+			<section class="inmo-caja">
 				<h2>Registrar consulta o nota</h2>
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 					<input type="hidden" name="action" value="inmo_contacto">

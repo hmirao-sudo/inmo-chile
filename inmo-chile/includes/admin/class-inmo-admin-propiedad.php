@@ -63,6 +63,9 @@ class Inmo_Admin_Propiedad {
 		if ( 'auto-draft' === $post->post_status || Inmo_Permisos::puede_ver_privado( $post->ID ) ) {
 			add_meta_box( 'inmo_captacion', 'Captación: titulares, mandato y documentos (privado)', array( __CLASS__, 'mb_captacion' ), INMO_CPT, 'normal', 'default' );
 		}
+		if ( 'auto-draft' !== $post->post_status && Inmo_Permisos::puede_ver_privado( $post->ID ) ) {
+			add_meta_box( 'inmo_expediente', 'Expediente: oportunidades, ofertas, documentos emitidos y antecedentes (privado)', array( __CLASS__, 'mb_expediente' ), INMO_CPT, 'normal', 'default' );
+		}
 		add_meta_box( 'inmo_actividad', 'Consultas, visitas e historial', array( __CLASS__, 'mb_actividad' ), INMO_CPT, 'normal', 'low' );
 	}
 
@@ -150,7 +153,9 @@ class Inmo_Admin_Propiedad {
 			<li><span>Dueño/a</span> <?php echo $priv ? ( $titulares ? esc_html( implode( ', ', wp_list_pluck( $titulares, 'nombre' ) ) ) : '<em>Sin titular</em>' ) : '<em>Restringido</em>'; ?></li>
 			<li><span>Interesados</span> <?php echo count( $personas ); ?> persona(s) · <?php echo (int) $n['consulta']; ?> consulta(s)</li>
 			<li><span>Visitas</span> <?php echo (int) $n['visita']; ?><?php echo $n['visita_pend'] ? ' · <strong>' . (int) $n['visita_pend'] . ' por confirmar</strong>' : ''; ?></li>
-			<li><span>Ofertas</span> <em>Entrega 2</em></li>
+			<?php $ofs = $priv ? Inmo_Ofertas::de_propiedad( $post->ID ) : array(); $ops = $priv ? Inmo_Oportunidades::de_propiedad( $post->ID, true ) : array(); ?>
+			<li><span>Oportunidades</span> <?php echo $priv ? count( $ops ) . ' abierta(s)' : '<em>Restringido</em>'; ?></li>
+			<li><span>Ofertas</span> <?php echo $priv ? count( $ofs ) . ( $ofs ? ' · última ' . esc_html( Inmo_Util::formatear_monto( $ofs[0]->monto, $ofs[0]->moneda ) . ' (' . Inmo_Ofertas::ESTADOS[ $ofs[0]->estado ] . ')' ) : '' ) : '<em>Restringido</em>'; ?></li>
 			<li><span>Documentos</span> <?php echo $priv ? count( $docs ) : '<em>Restringido</em>'; ?></li>
 			<li><span>Canales</span>
 				<span class="inmo-canal <?php echo $publicada ? 'is-on' : 'is-off'; ?>">Sitio web: <?php echo $publicada ? 'publicado' : 'no publicado'; ?></span>
@@ -225,7 +230,7 @@ class Inmo_Admin_Propiedad {
 				<p class="inmo-cond"<?php echo self::data_aplica( $c ); // phpcs:ignore WordPress.Security.EscapeOutput ?>><label for="inmo_c_<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $c['label'] ); ?></label>
 				<?php echo self::input_campo( 'inmo_c[' . $k . ']', $c, get_post_meta( $post->ID, '_inmo_' . $k, true ), 'inmo_c_' . $k ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
 			<?php endforeach; ?>
-			<p class="inmo-cond" data-tipos="" data-ops="venta"><em>Ofertas, reserva y cierre de la venta: Entrega 2.</em></p>
+			<p class="inmo-cond" data-tipos="" data-ops=""><em>Ofertas, reserva y cierre se registran en cada oportunidad (ver «Expediente»).</em></p>
 
 			<h3 class="inmo-subtitulo">Ubicación</h3>
 			<p><label for="inmo_comuna">Comuna *</label>
@@ -388,6 +393,48 @@ class Inmo_Admin_Propiedad {
 		?>
 		<p><label><input type="checkbox" name="inmo_invitar" value="1"> Generar un nuevo enlace para que el titular complete características y fotos (anula el anterior; se envía por correo y se muestra para copiarlo)</label></p>
 		<?php
+	}
+
+	public static function mb_expediente( $post ) {
+		$ops = Inmo_Oportunidades::de_propiedad( $post->ID );
+		echo '<h3 class="inmo-subtitulo">Oportunidades</h3>';
+		if ( $ops ) {
+			echo '<table class="widefat striped"><thead><tr><th>Cliente</th><th>Etapa</th><th>Valor</th><th>Actualizada</th></tr></thead><tbody>';
+			foreach ( $ops as $o ) {
+				echo '<tr><td><a href="' . esc_url( admin_url( 'admin.php?page=inmo-oportunidades&id=' . $o->id ) ) . '">' . esc_html( $o->nombre ) . '</a></td><td>' . esc_html( Inmo_Oportunidades::ETAPAS[ $o->etapa ] ) . '</td><td>' . esc_html( Inmo_Oportunidades::valor_texto( $o ) ) . '</td><td>' . esc_html( Inmo_Util::fecha( $o->actualizado ) ) . '</td></tr>';
+			}
+			echo '</tbody></table>';
+		} else {
+			echo '<p>Sin oportunidades. Se crean al recibir consultas o desde la ficha de un contacto.</p>';
+		}
+		$ofs = Inmo_Ofertas::de_propiedad( $post->ID );
+		if ( $ofs ) {
+			echo '<h3 class="inmo-subtitulo">Ofertas</h3><table class="widefat striped"><tbody>';
+			foreach ( $ofs as $f ) {
+				echo '<tr><td>' . esc_html( Inmo_Util::fecha( $f->creado ) ) . '</td><td>' . esc_html( $f->nombre ) . '</td><td><strong>' . esc_html( Inmo_Util::formatear_monto( $f->monto, $f->moneda ) ) . '</strong></td><td>' . esc_html( Inmo_Ofertas::ESTADOS[ $f->estado ] ) . '</td></tr>';
+			}
+			echo '</tbody></table>';
+		}
+		echo '<h3 class="inmo-subtitulo">Documentos emitidos</h3>';
+		echo '<p><a class="button" href="' . esc_url( admin_url( 'admin.php?page=inmo-documento&propiedad=' . $post->ID ) ) . '">Emitir mandato u otro documento de la propiedad</a> <span class="description">Contratos de arriendo, promesas, reservas y órdenes de visita se emiten desde la oportunidad.</span></p>';
+		Inmo_Admin_Oportunidades::tabla_emisiones( Inmo_Contratos::de_propiedad( $post->ID ) );
+
+		$op = Inmo_Propiedades::termino( $post->ID, Inmo_Propiedades::TAX_OPERACION );
+		echo '<h3 class="inmo-subtitulo">Antecedentes' . ( 'venta' === $op ? ' para la compraventa' : ' para el arriendo' ) . '</h3>';
+		echo '<table class="widefat striped"><thead><tr><th>Antecedente</th><th>Estado</th><th>Subir / reemplazar</th></tr></thead><tbody>';
+		foreach ( Inmo_Expediente::estado_antecedentes( $post->ID ) as $k => $a ) {
+			echo '<tr><td>' . esc_html( $a['label'] ) . '</td><td>';
+			echo $a['doc'] ? '✔ <a href="' . esc_url( Inmo_Documentos::url( $a['doc']->id ) ) . '">' . esc_html( $a['doc']->nombre ) . '</a> <span class="description">' . esc_html( Inmo_Util::fecha( $a['doc']->creado ) ) . '</span>' : '<span class="inmo-badge inmo-badge--pendiente">Pendiente</span>';
+			echo '</td><td><label class="screen-reader-text" for="ant-' . esc_attr( $k ) . '">' . esc_html( $a['label'] ) . '</label><input type="file" id="ant-' . esc_attr( $k ) . '" name="inmo_ant_' . esc_attr( $k ) . '" accept=".pdf,.jpg,.jpeg,.png"></td></tr>';
+		}
+		echo '</tbody></table>';
+		if ( 'venta' === $op ) {
+			$esc = Inmo_Expediente::escritura( $post->ID );
+			echo '<h3 class="inmo-subtitulo">Escritura de compraventa definitiva</h3>';
+			echo $esc ? '<p>Archivada: <a href="' . esc_url( Inmo_Documentos::url( $esc->id ) ) . '">' . esc_html( $esc->nombre ) . '</a> (' . esc_html( Inmo_Util::fecha( $esc->creado ) ) . ')</p>' : '<p>Aún no se archiva la escritura.</p>';
+			echo '<p><label for="inmo_escritura">Archivar escritura (PDF)</label> <input type="file" id="inmo_escritura" name="inmo_escritura" accept=".pdf"></p>';
+		}
+		echo '<p class="description">Los archivos se guardan en el almacenamiento privado al pulsar «Guardar ficha».</p>';
 	}
 
 	public static function mb_actividad( $post ) {
@@ -572,6 +619,21 @@ class Inmo_Admin_Propiedad {
 			if ( is_wp_error( $r ) ) {
 				Inmo_Admin::avisar( 'error', 'Documento: ' . esc_html( $r->get_error_message() ) );
 			}
+		}
+
+		// Antecedentes y escritura (expediente).
+		$op_prop = Inmo_Propiedades::termino( $post_id, Inmo_Propiedades::TAX_OPERACION );
+		foreach ( Inmo_Expediente::antecedentes( $op_prop ) as $k => $l ) {
+			if ( ! empty( $_FILES[ 'inmo_ant_' . $k ]['name'] ) ) {
+				$r = Inmo_Documentos::guardar_subida( $_FILES[ 'inmo_ant_' . $k ], $post_id, 'antecedente', 0, false, $k ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+				if ( is_wp_error( $r ) ) {
+					Inmo_Admin::avisar( 'error', esc_html( $l . ': ' . $r->get_error_message() ) );
+				}
+			}
+		}
+		if ( ! empty( $_FILES['inmo_escritura']['name'] ) ) {
+			$r = Inmo_Documentos::guardar_subida( $_FILES['inmo_escritura'], $post_id, 'escritura' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			Inmo_Admin::avisar( is_wp_error( $r ) ? 'error' : 'success', is_wp_error( $r ) ? esc_html( 'Escritura: ' . $r->get_error_message() ) : 'Escritura archivada en el expediente.' );
 		}
 
 		// Fotos del propietario.

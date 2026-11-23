@@ -13,7 +13,10 @@ class Inmo_Documentos {
 
 	const TIPOS = array(
 		'mandato'          => 'Mandato / orden de corretaje',
+		'contrato'         => 'Documento emitido (PDF)',
+		'firmado'          => 'Documento firmado',
 		'antecedente'      => 'Antecedente legal',
+		'escritura'        => 'Escritura de compraventa',
 		'foto_propietario' => 'Foto enviada por el propietario',
 		'otro'             => 'Otro',
 	);
@@ -64,7 +67,7 @@ class Inmo_Documentos {
 	 *
 	 * @return int|WP_Error ID del documento.
 	 */
-	public static function guardar_subida( array $file, $propiedad_id, $tipo, $contacto_id = 0, $solo_imagenes = false ) {
+	public static function guardar_subida( array $file, $propiedad_id, $tipo, $contacto_id = 0, $solo_imagenes = false, $subtipo = '' ) {
 		if ( ! empty( $file['error'] ) ) {
 			return new WP_Error( 'inmo_subida', 'No se pudo recibir el archivo (código ' . (int) $file['error'] . ').' );
 		}
@@ -93,10 +96,10 @@ class Inmo_Documentos {
 		if ( ! $ok ) {
 			return new WP_Error( 'inmo_mover', 'No se pudo guardar el archivo.' );
 		}
-		return self::registrar( $propiedad_id, $tipo, $sub . '/' . $nombre, sanitize_file_name( $file['name'] ), $check['type'], $contacto_id );
+		return self::registrar( $propiedad_id, $tipo, $sub . '/' . $nombre, sanitize_file_name( $file['name'] ), $check['type'], $contacto_id, $subtipo );
 	}
 
-	public static function registrar( $propiedad_id, $tipo, $ruta_rel, $nombre, $mime, $contacto_id = 0 ) {
+	public static function registrar( $propiedad_id, $tipo, $ruta_rel, $nombre, $mime, $contacto_id = 0, $subtipo = '' ) {
 		global $wpdb;
 		$abs = self::directorio() . '/' . $ruta_rel;
 		$wpdb->insert(
@@ -105,6 +108,7 @@ class Inmo_Documentos {
 				'propiedad_id' => (int) $propiedad_id,
 				'contacto_id'  => (int) $contacto_id,
 				'tipo'         => isset( self::TIPOS[ $tipo ] ) ? $tipo : 'otro',
+				'subtipo'      => sanitize_key( $subtipo ),
 				'nombre'       => $nombre,
 				'ruta'         => $ruta_rel,
 				'mime'         => $mime,
@@ -118,6 +122,18 @@ class Inmo_Documentos {
 		$id = (int) $wpdb->insert_id;
 		Inmo_Historial::registrar( 'documento', self::TIPOS[ isset( self::TIPOS[ $tipo ] ) ? $tipo : 'otro' ] . ': ' . $nombre, array( 'propiedad_id' => $propiedad_id, 'contacto_id' => $contacto_id ) );
 		return $id;
+	}
+
+	/** Guarda contenido generado (p. ej. un PDF emitido) en el almacenamiento privado. */
+	public static function guardar_contenido( $contenido, $ext, $propiedad_id, $tipo, $nombre, $mime, $contacto_id = 0, $subtipo = '' ) {
+		$sub = gmdate( 'Y/m' );
+		$dir = self::directorio() . '/' . $sub;
+		wp_mkdir_p( $dir );
+		$archivo = bin2hex( random_bytes( 16 ) ) . '.' . $ext;
+		if ( false === file_put_contents( $dir . '/' . $archivo, $contenido ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions
+			return new WP_Error( 'inmo_guardar', 'No se pudo guardar el archivo.' );
+		}
+		return self::registrar( $propiedad_id, $tipo, $sub . '/' . $archivo, $nombre, $mime, $contacto_id, $subtipo );
 	}
 
 	public static function get( $id ) {

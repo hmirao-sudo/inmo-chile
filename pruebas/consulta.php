@@ -67,6 +67,31 @@ switch ( $cmd ) {
 		wp_set_current_user( get_user_by( 'login', $argv[3] )->ID );
 		$out = array( 'url' => Inmo_Documentos::url( (int) $argv[2] ) );
 		break;
+	case 'oportunidad':
+		// argv[2] = email del contacto, argv[3] = código de propiedad
+		$cid = Inmo_Contactos::buscar_existente( $argv[2], '' );
+		$pid = Inmo_Propiedades::por_codigo( $argv[3] );
+		$out = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . Inmo_Oportunidades::tabla() . ' WHERE contacto_id=%d AND propiedad_id=%d ORDER BY id DESC LIMIT 1', $cid, $pid ) );
+		break;
+	case 'oportunidades_propiedad':
+		$out = $wpdb->get_results( $wpdb->prepare( 'SELECT id, contacto_id, etapa, motivo_perdida FROM ' . Inmo_Oportunidades::tabla() . ' WHERE propiedad_id=%d ORDER BY id', Inmo_Propiedades::por_codigo( $argv[2] ) ) );
+		break;
+	case 'plantilla':
+		$pl = Inmo_Plantillas::de_tipo( $argv[2] );
+		$out = array( 'id' => $pl[0]->ID, 'version' => (int) get_post_meta( $pl[0]->ID, '_inmo_version', true ) );
+		break;
+	case 'emisiones':
+		$rows = $wpdb->get_results( 'SELECT id, numero, tipo, plantilla_version, sha256, estado_emision, estado_firma, documento_id, html FROM ' . Inmo_Contratos::tabla() . ' ORDER BY id' );
+		foreach ( $rows as $r ) {
+			$e = Inmo_Contratos::get( $r->id );
+			$doc = Inmo_Documentos::get( $r->documento_id );
+			$r->ruta_pdf = Inmo_Documentos::ruta_absoluta( $doc );
+			$r->sha_actual = $r->ruta_pdf ? hash_file( 'sha256', $r->ruta_pdf ) : '';
+			$r->integro = Inmo_Contratos::integro( $e );
+			$r->firmantes = $e->firmantes;
+		}
+		$out = $rows;
+		break;
 	case 'historial':
 		$out = $wpdb->get_results( $wpdb->prepare( 'SELECT accion, detalle FROM ' . Inmo_Historial::tabla() . ' WHERE propiedad_id=%d ORDER BY id', Inmo_Propiedades::por_codigo( $argv[2] ) ) );
 		break;

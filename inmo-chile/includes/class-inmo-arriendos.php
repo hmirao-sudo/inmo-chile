@@ -278,9 +278,10 @@ class Inmo_Arriendos {
 		}
 		$uf = null;
 		if ( 'UF' === $a->moneda ) {
-			$uf      = Inmo_Indicadores::uf_para( min( $vence, current_time( 'Y-m-d' ) ) );
+			// UF del día de vencimiento (la CMF la publica hasta el día 9 del mes siguiente); si aún no se conoce, la última disponible.
+			$uf      = Inmo_Indicadores::uf_para( $vence );
 			$monto   = (int) round( $renta * $uf['valor'] );
-			$nota[]  = 'UF ' . Inmo_Util::formatear_monto( $uf['valor'], 'CLP' ) . ' al ' . Inmo_Util::fecha( $uf['fecha'] ) . ' (' . $uf['fuente'] . ')';
+			$nota[]  = 'UF ' . Inmo_Util::formatear_monto( $uf['valor'], 'CLP' ) . ' al ' . Inmo_Util::fecha( $uf['fecha'] ) . ( $uf['exacta'] ? '' : ' (última UF conocida; vence el ' . Inmo_Util::fecha( $vence ) . ')' ) . ' (' . $uf['fuente'] . ')';
 		} else {
 			$monto = (int) round( $renta );
 		}

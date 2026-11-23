@@ -1,7 +1,7 @@
 /*
 Theme Name: Inmo Vitrina
 Description: Vitrina pública para corredoras de propiedades en Chile. Requiere el plugin Inmo Chile. Marca, colores y contacto configurables desde Inmobiliaria → Ajustes.
-Version: 0.1.0
+Version: 0.2.0
 Requires at least: 6.2
 Requires PHP: 7.4
 Author: Equipo de desarrollo
@@ -249,6 +249,34 @@ main:focus { outline: none; }
 .inmo-radio:has(input:checked) { background: color-mix(in srgb, var(--marca) 10%, #fff); outline-color: var(--marca); }
 .inmo-tabs [role=tab][aria-selected=true] { color: var(--marca); }
 .aviso { background: #fff3cd; padding: 12px; border-radius: 8px; }
+
+/* Portal del propietario */
+.inmo-portal { display: grid; gap: 16px; }
+.inmo-portal__hola { margin: 0; color: var(--tinta-suave); }
+.inmo-portal h2 { margin: 16px 0 4px; }
+.inmo-portal__grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.inmo-portal__prop { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); overflow: hidden; }
+.inmo-portal__prop img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.inmo-portal__prop h3, .inmo-portal__prop p, .inmo-portal__prop ul { margin: 8px 14px; }
+.inmo-portal__prop h3 { font-size: 1.05rem; }
+.inmo-portal__prop h3 a { color: var(--tinta); text-decoration: none; }
+.inmo-portal__cifras { list-style: none; padding: 0; display: flex; gap: 14px; }
+.inmo-portal__estado { display: inline-block; padding: 1px 10px; border-radius: 999px; background: color-mix(in srgb, var(--marca) 12%, #fff); color: var(--marca); font-weight: 700; font-size: .85rem; }
+.inmo-portal__datos { list-style: none; padding: 0; margin: 0; background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); }
+.inmo-portal__datos li { display: flex; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--borde); flex-wrap: wrap; }
+.inmo-portal__datos li:last-child { border-bottom: 0; }
+.inmo-portal__datos span { flex: 0 0 150px; color: var(--tinta-suave); }
+.inmo-portal__tabla { overflow-x: auto; background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); }
+.inmo-portal__tabla table { width: 100%; border-collapse: collapse; min-width: 480px; }
+.inmo-portal__tabla th, .inmo-portal__tabla td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borde); }
+.inmo-portal__tabla th { font-size: .85rem; color: var(--tinta-suave); }
+.inmo-portal__docs { padding-left: 1.2em; }
+.inmo-portal__docs li { margin: 6px 0; }
+.inmo-portal__mensaje, .inmo-portal--login { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); padding: 16px 20px; }
+#inmo-portal-login p { display: flex; flex-direction: column; gap: 4px; }
+#inmo-portal-login .login-remember { flex-direction: row; align-items: center; }
+#inmo-portal-login input[type=text], #inmo-portal-login input[type=password] { font: inherit; min-height: 44px; padding: .5em .7em; border: 1px solid #8a8f98; border-radius: 8px; max-width: 360px; }
+#inmo-portal-login .button-primary { font: inherit; font-weight: 600; min-height: 44px; padding: .6em 1.4em; border-radius: 999px; border: 0; background: var(--acento); color: #1b1206; cursor: pointer; }
 
 /* Pie */
 .pie { background: #15232a; color: #dfe6e9; padding: 40px 0 20px; margin-top: 40px; }

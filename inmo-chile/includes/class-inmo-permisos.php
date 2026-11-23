@@ -44,6 +44,9 @@ class Inmo_Permisos {
 		);
 		remove_role( self::ROL_CORREDOR );
 		add_role( self::ROL_CORREDOR, 'Corredor/a de propiedades', $corredor );
+		if ( ! get_role( 'inmo_propietario' ) ) {
+			add_role( 'inmo_propietario', 'Propietario/a (portal)', array( 'read' => true ) );
+		}
 
 		$admin = get_role( 'administrator' );
 		if ( $admin ) {
@@ -58,6 +61,7 @@ class Inmo_Permisos {
 
 	public static function quitar_roles() {
 		remove_role( self::ROL_CORREDOR );
+		remove_role( 'inmo_propietario' );
 		$admin = get_role( 'administrator' );
 		if ( $admin ) {
 			foreach ( array_merge( self::caps_cpt(), array( 'inmo_gestionar', 'inmo_ver_todo', 'inmo_aprobar', 'inmo_ajustes' ) ) as $cap ) {

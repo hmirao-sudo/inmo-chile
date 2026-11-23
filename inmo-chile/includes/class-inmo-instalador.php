@@ -35,6 +35,9 @@ class Inmo_Instalador {
 			Inmo_Permisos::registrar_roles();
 			update_option( 'inmo_db_version', INMO_DB_VERSION );
 		}
+		if ( ! get_option( 'inmo_pagina_portal' ) ) {
+			add_action( 'init', array( __CLASS__, 'crear_paginas' ), 30 );
+		}
 		if ( ! get_option( 'inmo_plantillas_muestra' ) ) {
 			// Después de registrar el tipo de contenido (init, prioridad 10).
 			add_action( 'init', array( 'Inmo_Plantillas', 'crear_muestras' ), 20 );
@@ -408,6 +411,7 @@ class Inmo_Instalador {
 			'inmo_pagina_propietarios' => array( 'publica-tu-propiedad', 'Vende o arrienda tu propiedad', '[inmo_formulario_propietario]' ),
 			'inmo_pagina_completar'    => array( 'completar-propiedad', 'Completa la ficha de tu propiedad', '[inmo_completar_propiedad]' ),
 			'inmo_pagina_contacto'     => array( 'contacto', 'Contacto', '[inmo_formulario_general]' ),
+			'inmo_pagina_portal'       => array( 'portal-propietario', 'Portal de propietarios', '[inmo_portal_propietario]' ),
 		);
 		foreach ( $paginas as $opcion => $p ) {
 			$id = (int) get_option( $opcion );

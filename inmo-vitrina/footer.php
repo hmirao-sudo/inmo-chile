@@ -32,6 +32,7 @@
 			<h2 class="pie__titulo">Propietarios</h2>
 			<p><a href="<?php echo esc_url( inmo_vitrina_url_pagina( 'inmo_pagina_propietarios', '/publica-tu-propiedad/' ) ); ?>">Vende o arrienda con nosotros</a></p>
 			<p><a href="<?php echo esc_url( add_query_arg( 'quiero', 'valorizar', inmo_vitrina_url_pagina( 'inmo_pagina_propietarios', '/publica-tu-propiedad/' ) ) ); ?>">Solicita una valorización</a></p>
+			<p><a href="<?php echo esc_url( inmo_vitrina_url_pagina( 'inmo_pagina_portal', '/portal-propietario/' ) ); ?>">Portal de propietarios (acceso)</a></p>
 			<?php if ( get_privacy_policy_url() ) : ?><p><a href="<?php echo esc_url( get_privacy_policy_url() ); ?>">Política de privacidad</a></p><?php endif; ?>
 		</div>
 	</div>

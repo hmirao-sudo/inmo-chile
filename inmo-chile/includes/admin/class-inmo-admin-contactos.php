@@ -167,6 +167,25 @@ class Inmo_Admin_Contactos {
 					echo '</ul>';
 				}
 				?>
+				<?php if ( Inmo_Contactos::propiedades_titular( $id ) ) : ?>
+					<h2>Portal de propietarios</h2>
+					<?php $uid_portal = Inmo_Portal::usuario_de( $id ); ?>
+					<?php if ( $uid_portal && ! Inmo_Portal::revocado( $uid_portal ) ) : ?>
+						<p>Acceso <strong>activo</strong> (usuario <code><?php echo esc_html( get_userdata( $uid_portal )->user_login ); ?></code>).</p>
+					<?php elseif ( $uid_portal ) : ?>
+						<p>Acceso <strong>revocado</strong>.</p>
+					<?php else : ?>
+						<p>Sin acceso al portal.</p>
+					<?php endif; ?>
+					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="inmo-ctrl">
+						<input type="hidden" name="action" value="inmo_contacto"><input type="hidden" name="id" value="<?php echo (int) $id; ?>"><input type="hidden" name="op" value="portal">
+						<?php wp_nonce_field( 'inmo_contacto_' . $id ); ?>
+						<button class="button" name="portal" value="invitar"><?php echo $uid_portal && ! Inmo_Portal::revocado( $uid_portal ) ? 'Reenviar enlace de acceso' : 'Dar acceso al portal'; ?></button>
+						<?php if ( $uid_portal && ! Inmo_Portal::revocado( $uid_portal ) ) : ?>
+							<button class="button" name="portal" value="revocar" onclick="return confirm('¿Revocar el acceso al portal?');">Revocar acceso</button>
+						<?php endif; ?>
+					</form>
+				<?php endif; ?>
 				<h2>Consultas por inmueble</h2>
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 					<input type="hidden" name="action" value="inmo_consultas">
@@ -276,6 +295,21 @@ class Inmo_Admin_Contactos {
 			wp_die( 'Sin permiso.', '', array( 'response' => 403 ) );
 		}
 		$op = Inmo_Util::post( 'op' );
+		if ( 'portal' === $op && $id ) {
+			if ( 'revocar' === Inmo_Util::post( 'portal' ) ) {
+				$r = Inmo_Portal::revocar( $id );
+				Inmo_Admin::avisar( is_wp_error( $r ) ? 'error' : 'success', is_wp_error( $r ) ? esc_html( $r->get_error_message() ) : 'Acceso al portal revocado.' );
+			} else {
+				$r = Inmo_Portal::invitar( $id );
+				if ( is_wp_error( $r ) ) {
+					Inmo_Admin::avisar( 'error', esc_html( $r->get_error_message() ) );
+				} else {
+					Inmo_Admin::avisar( $r['enviado'] ? 'success' : 'warning', 'Acceso al portal listo (usuario <code>' . esc_html( $r['login'] ) . '</code>)' . ( $r['enviado'] ? ' y enviado por correo' : '. <strong>El correo no se pudo enviar</strong>: copia el enlace y envíaselo' ) . '. Enlace para crear la contraseña:<br><input type="text" readonly class="large-text" value="' . esc_url( $r['url'] ) . '" aria-label="Enlace de acceso"> <button type="button" class="button" data-inmo-copiar>Copiar</button>' );
+				}
+			}
+			wp_safe_redirect( admin_url( 'admin.php?page=inmo-contactos&contacto=' . $id ) );
+			exit;
+		}
 		if ( 'registro' === $op && $id ) {
 			$tipo   = Inmo_Util::post( 'r_tipo' );
 			$texto  = Inmo_Util::post_textarea( 'r_texto' );

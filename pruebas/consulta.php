@@ -105,6 +105,54 @@ switch ( $cmd ) {
 		}
 		$out = $a;
 		break;
+	case 'portal_puede':
+		// argv[2] = email del contacto, argv[3] = id de documento
+		$out = array( 'puede' => Inmo_Portal::puede_descargar( Inmo_Contactos::buscar_existente( $argv[2], '' ), (int) $argv[3] ) );
+		break;
+	case 'docs_propiedad':
+		$out = $wpdb->get_results( $wpdb->prepare( 'SELECT id, tipo, subtipo, nombre FROM ' . Inmo_Documentos::tabla() . ' WHERE propiedad_id=%d ORDER BY id', Inmo_Propiedades::por_codigo( $argv[2] ) ) );
+		break;
+	case 'mensajes_portal':
+		$out = $wpdb->get_results( $wpdb->prepare( 'SELECT id, tipo, codigo, mensaje, origen, corredor_id FROM ' . Inmo_Consultas::tabla() . " WHERE contacto_id=%d AND origen='portal'", Inmo_Contactos::buscar_existente( $argv[2], '' ) ) );
+		break;
+	case 'probar_cmf':
+		// Simula la API CMF (formato documentado en api.cmfchile.cl/documentacion/UF.html) sin clave real.
+		$pedidas = array();
+		$modo    = $argv[2] ?? 'ok';
+		add_filter( 'pre_http_request', static function ( $pre, $args, $url ) use ( &$pedidas, $modo ) {
+			if ( false === strpos( $url, 'api.cmfchile.cl' ) ) {
+				return $pre;
+			}
+			$pedidas[] = $url;
+			if ( 'clave_invalida' === $modo ) {
+				return array( 'response' => array( 'code' => 421, 'message' => '' ), 'body' => wp_json_encode( array( 'CodigoHTTP' => 421, 'CodigoError' => 91, 'Mensaje' => 'API key no valida' ) ), 'headers' => array(), 'cookies' => array() );
+			}
+			$ufs = array();
+			$d   = date_create_immutable( 'first day of last month', wp_timezone() );
+			$fin = date_create_immutable( 'first day of next month', wp_timezone() )->modify( '+8 days' ); // publicada hasta el día 9 del mes siguiente
+			$v   = 39000.00;
+			while ( $d <= $fin ) {
+				$ufs[] = array( 'Valor' => number_format( $v, 2, ',', '.' ), 'Fecha' => $d->format( 'Y-m-d' ) );
+				$v    += 7.25;
+				$d     = $d->modify( '+1 day' );
+			}
+			return array( 'response' => array( 'code' => 200, 'message' => 'OK' ), 'body' => wp_json_encode( array( 'UFs' => $ufs ) ), 'headers' => array(), 'cookies' => array() );
+		}, 10, 3 );
+		$antes = array( Inmo_Ajustes::get( 'uf_valor' ), Inmo_Ajustes::get( 'uf_fecha' ), Inmo_Ajustes::get( 'uf_fuente' ) );
+		Inmo_Ajustes::guardar( array( 'uf_fuente_auto' => 'cmf', 'cmf_api_key' => 'CLAVE-DE-PRUEBA' ) );
+		$r   = Inmo_Indicadores::actualizar_uf();
+		$hoy = current_time( 'Y-m-d' );
+		$vto = date_create_immutable( 'first day of next month', wp_timezone() )->modify( '+4 days' )->format( 'Y-m-d' );
+		$out = array(
+			'resultado' => is_wp_error( $r ) ? array( 'error' => $r->get_error_message() ) : $r,
+			'url'       => $pedidas ? preg_replace( '/apikey=[^&]+/', 'apikey=***', $pedidas[0] ) : '',
+			'antes'     => $antes,
+			'vigente'   => array( Inmo_Ajustes::get( 'uf_valor' ), Inmo_Ajustes::get( 'uf_fecha' ), Inmo_Ajustes::get( 'uf_fuente' ) ),
+			'hoy'       => $hoy,
+			'uf_vencimiento_futuro' => Inmo_Indicadores::uf_para( $vto ),
+			'vencimiento' => $vto,
+		);
+		break;
 	case 'historial':
 		$out = $wpdb->get_results( $wpdb->prepare( 'SELECT accion, detalle FROM ' . Inmo_Historial::tabla() . ' WHERE propiedad_id=%d ORDER BY id', Inmo_Propiedades::por_codigo( $argv[2] ) ) );
 		break;

@@ -8,4 +8,7 @@ foreach (['inmo_arriendos','inmo_cobros','inmo_pagos','inmo_movimientos','inmo_l
 foreach (['camila.rojas','diego.munoz'] as $l) { $u=get_user_by('login',$l); if($u) wp_delete_user($u->ID); }
 delete_option('inmo_datos_prueba'); update_option('inmo_codigo_seq',0);
 $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient%inmo_%'");
+delete_option("inmo_uf_historial");
+$aj = get_option("inmo_ajustes", array()); if (is_array($aj)) { foreach (array("uf_valor","uf_fecha","uf_fuente","uf_fuente_auto","cmf_api_key") as $k) unset($aj[$k]); update_option("inmo_ajustes", $aj); }
+foreach (get_users(array("role"=>"inmo_propietario","fields"=>"ID")) as $u) wp_delete_user($u);
 echo "reset\n";

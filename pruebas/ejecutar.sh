@@ -7,3 +7,4 @@ php demo.php > /dev/null
 node pruebas/aceptacion.js
 node pruebas/aceptacion2.js
 node pruebas/aceptacion3.js
+node pruebas/aceptacion4.js

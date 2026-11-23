@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       Inmo Chile — Gestión inmobiliaria
- * Description:       Propiedades, captación, CRM de consultas y vitrina pública para corredoras de propiedades en Chile. Entregas 1, 2 y administración de arriendos.
- * Version:           0.3.0
+ * Description:       Propiedades, captación, CRM de consultas y vitrina pública para corredoras de propiedades en Chile. Entregas 1, 2, administración de arriendos y portal del dueño.
+ * Version:           0.4.0
  * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            Equipo de desarrollo
@@ -14,8 +14,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'INMO_VERSION', '0.3.0' );
-define( 'INMO_DB_VERSION', '3' );
+define( 'INMO_VERSION', '0.4.0' );
+define( 'INMO_DB_VERSION', '4' );
 define( 'INMO_FILE', __FILE__ );
 define( 'INMO_DIR', plugin_dir_path( __FILE__ ) );
 define( 'INMO_URL', plugin_dir_url( __FILE__ ) );
@@ -46,6 +46,7 @@ $inmo_archivos = array(
 	'class-inmo-indicadores',
 	'class-inmo-arriendos',
 	'class-inmo-liquidaciones',
+	'class-inmo-portal',
 	'class-inmo-instalador',
 	'class-inmo-datos-prueba',
 );
@@ -81,6 +82,7 @@ add_action(
 		Inmo_Contratos::init();
 		Inmo_Indicadores::init();
 		Inmo_Arriendos::init();
+		Inmo_Portal::init();
 		if ( is_admin() ) {
 			Inmo_Admin::init();
 			Inmo_Admin_Propiedad::init();

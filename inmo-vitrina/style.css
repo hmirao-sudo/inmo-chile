@@ -270,6 +270,14 @@ main:focus { outline: none; }
 .inmo-portal__tabla table { width: 100%; border-collapse: collapse; min-width: 480px; }
 .inmo-portal__tabla th, .inmo-portal__tabla td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borde); }
 .inmo-portal__tabla th { font-size: .85rem; color: var(--tinta-suave); }
+@media (max-width: 640px) {
+	.inmo-portal__tabla { border: 0; background: none; }
+	.inmo-portal__tabla table { min-width: 0; }
+	.inmo-portal__tabla thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+	.inmo-portal__tabla tr { display: block; background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); margin-bottom: 10px; padding: 4px 0; }
+	.inmo-portal__tabla td { display: flex; justify-content: space-between; gap: 12px; border: 0; padding: 6px 14px; text-align: right; }
+	.inmo-portal__tabla td::before { content: attr(data-label); font-weight: 600; color: var(--tinta-suave); text-align: left; }
+}
 .inmo-portal__docs { padding-left: 1.2em; }
 .inmo-portal__docs li { margin: 6px 0; }
 .inmo-portal__mensaje, .inmo-portal--login { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); padding: 16px 20px; }

@@ -357,7 +357,7 @@ class Inmo_Portal {
 			$ofs   = Inmo_Ofertas::de_propiedad( $pid );
 			$arr   = Inmo_Arriendos::vigente_de_propiedad( $pid );
 			$h    .= '<article class="inmo-portal__prop">' . ( $g ? wp_get_attachment_image( $g[0], 'medium', false, array( 'alt' => '' ) ) : '' );
-			$h    .= '<h3><a href="' . esc_url( add_query_arg( 'propiedad', $pid, self::url() ) ) . '">' . esc_html( get_post_meta( $pid, '_inmo_codigo', true ) . ' · ' . get_the_title( $pid ) ) . '</a></h3>';
+			$h    .= '<h3><a href="' . esc_url( add_query_arg( 'propiedad', $pid, self::url() ) ) . '">' . esc_html( get_post_meta( $pid, '_inmo_codigo', true ) . ' · ' . get_post_field( 'post_title', $pid ) ) . '</a></h3>';
 			$h    .= '<p><span class="inmo-portal__estado inmo-portal__estado--' . esc_attr( $est ) . '">' . esc_html( Inmo_Esquema::ESTADOS[ $est ] ?? '' ) . '</span> · ' . esc_html( self::estado_publicacion( $pid ) ) . '</p>';
 			$h    .= '<ul class="inmo-portal__cifras"><li><strong>' . (int) $cons . '</strong> consultas</li><li><strong>' . (int) $vis . '</strong> visitas</li><li><strong>' . count( $ofs ) . '</strong> ofertas</li></ul>';
 			if ( $arr ) {
@@ -384,9 +384,9 @@ class Inmo_Portal {
 	private static function tabla_liquidaciones( array $liqs ) {
 		$h = '<div class="inmo-portal__tabla"><table><thead><tr><th scope="col">N°</th><th scope="col">Período</th><th scope="col">Recaudado</th><th scope="col">Descuentos</th><th scope="col">A transferir</th><th scope="col">Estado</th><th scope="col">PDF</th></tr></thead><tbody>';
 		foreach ( $liqs as $l ) {
-			$h .= '<tr><td>' . esc_html( $l->numero ) . '</td><td>' . esc_html( Inmo_Arriendos::periodo_texto( $l->periodo ) ) . '</td><td>' . esc_html( Inmo_Util::formatear_monto( $l->ingresos, 'CLP' ) ) . '</td><td>' . esc_html( Inmo_Util::formatear_monto( -( $l->comision + $l->iva + $l->gastos ), 'CLP' ) ) . '</td>';
-			$h .= '<td><strong>' . esc_html( Inmo_Util::formatear_monto( $l->neto, 'CLP' ) ) . '</strong></td><td>' . esc_html( 'pagada' === $l->estado ? 'Transferida el ' . Inmo_Util::fecha( $l->pagada_fecha ) : 'Por transferir' ) . '</td>';
-			$h .= '<td><a href="' . esc_url( self::url_doc( $l->documento_id ) ) . '">Descargar<span class="sr"> liquidación ' . esc_html( $l->numero ) . '</span></a></td></tr>';
+			$h .= '<tr><td data-label="N°">' . esc_html( $l->numero ) . '</td><td data-label="Período">' . esc_html( Inmo_Arriendos::periodo_texto( $l->periodo ) ) . '</td><td data-label="Recaudado">' . esc_html( Inmo_Util::formatear_monto( $l->ingresos, 'CLP' ) ) . '</td><td data-label="Descuentos">' . esc_html( Inmo_Util::formatear_monto( -( $l->comision + $l->iva + $l->gastos ), 'CLP' ) ) . '</td>';
+			$h .= '<td data-label="A transferir"><strong>' . esc_html( Inmo_Util::formatear_monto( $l->neto, 'CLP' ) ) . '</strong></td><td data-label="Estado">' . esc_html( 'pagada' === $l->estado ? 'Transferida el ' . Inmo_Util::fecha( $l->pagada_fecha ) : 'Por transferir' ) . '</td>';
+			$h .= '<td data-label="PDF"><a href="' . esc_url( self::url_doc( $l->documento_id ) ) . '">Descargar<span class="sr"> liquidación ' . esc_html( $l->numero ) . '</span></a></td></tr>';
 		}
 		return $h . '</tbody></table></div>';
 	}
@@ -394,7 +394,7 @@ class Inmo_Portal {
 	private static function detalle( $c, $pid ) {
 		$est = get_post_meta( $pid, '_inmo_estado', true );
 		$h   = '<p><a href="' . esc_url( self::url() ) . '">← Mis propiedades</a></p>';
-		$h  .= '<h2>' . esc_html( get_post_meta( $pid, '_inmo_codigo', true ) . ' · ' . get_the_title( $pid ) ) . '</h2>';
+		$h  .= '<h2>' . esc_html( get_post_meta( $pid, '_inmo_codigo', true ) . ' · ' . get_post_field( 'post_title', $pid ) ) . '</h2>';
 		$corr = get_userdata( (int) get_post_field( 'post_author', $pid ) );
 		$h   .= '<ul class="inmo-portal__datos"><li><span>Estado</span> ' . esc_html( Inmo_Esquema::ESTADOS[ $est ] ?? '' ) . '</li>';
 		$h   .= '<li><span>Precio publicado</span> ' . esc_html( Inmo_Util::formatear_monto( get_post_meta( $pid, '_inmo_precio', true ), get_post_meta( $pid, '_inmo_moneda', true ) ) ) . '</li>';
@@ -409,7 +409,7 @@ class Inmo_Portal {
 		if ( $vis ) {
 			$h .= '<div class="inmo-portal__tabla"><table><thead><tr><th scope="col">Solicitada</th><th scope="col">Cita</th><th scope="col">Estado</th></tr></thead><tbody>';
 			foreach ( $vis as $v ) {
-				$h .= '<tr><td>' . esc_html( Inmo_Util::fecha( $v->creado ) ) . '</td><td>' . esc_html( $v->visita_fecha ? Inmo_Util::fecha( $v->visita_fecha, true ) : 'Por coordinar' ) . '</td><td>' . esc_html( Inmo_Consultas::etiqueta_estado( $v ) ) . '</td></tr>';
+				$h .= '<tr><td data-label="Solicitada">' . esc_html( Inmo_Util::fecha( $v->creado ) ) . '</td><td data-label="Cita">' . esc_html( $v->visita_fecha ? Inmo_Util::fecha( $v->visita_fecha, true ) : 'Por coordinar' ) . '</td><td data-label="Estado">' . esc_html( Inmo_Consultas::etiqueta_estado( $v ) ) . '</td></tr>';
 			}
 			$h .= '</tbody></table></div>';
 		}
@@ -417,7 +417,7 @@ class Inmo_Portal {
 		if ( $ofs ) {
 			$h .= '<h3>Ofertas</h3><div class="inmo-portal__tabla"><table><thead><tr><th scope="col">Fecha</th><th scope="col">Monto</th><th scope="col">Estado</th></tr></thead><tbody>';
 			foreach ( $ofs as $f ) {
-				$h .= '<tr><td>' . esc_html( Inmo_Util::fecha( $f->creado ) ) . '</td><td><strong>' . esc_html( Inmo_Util::formatear_monto( $f->monto, $f->moneda ) ) . '</strong></td><td>' . esc_html( Inmo_Ofertas::ESTADOS[ $f->estado ] ) . '</td></tr>';
+				$h .= '<tr><td data-label="Fecha">' . esc_html( Inmo_Util::fecha( $f->creado ) ) . '</td><td data-label="Monto"><strong>' . esc_html( Inmo_Util::formatear_monto( $f->monto, $f->moneda ) ) . '</strong></td><td data-label="Estado">' . esc_html( Inmo_Ofertas::ESTADOS[ $f->estado ] ) . '</td></tr>';
 			}
 			$h .= '</tbody></table></div>';
 		}
@@ -439,7 +439,7 @@ class Inmo_Portal {
 					if ( 'anulado' === $k->estado ) {
 						continue;
 					}
-					$h .= '<tr><td>' . esc_html( Inmo_Arriendos::periodo_texto( $k->periodo ) ) . '</td><td>' . esc_html( Inmo_Util::fecha( $k->vence ) ) . '</td><td>' . esc_html( Inmo_Util::formatear_monto( $k->total, 'CLP' ) ) . '</td><td>' . esc_html( Inmo_Arriendos::ESTADOS_COBRO[ $k->estado ] ) . '</td></tr>';
+					$h .= '<tr><td data-label="Mes">' . esc_html( Inmo_Arriendos::periodo_texto( $k->periodo ) ) . '</td><td data-label="Vence">' . esc_html( Inmo_Util::fecha( $k->vence ) ) . '</td><td data-label="Monto">' . esc_html( Inmo_Util::formatear_monto( $k->total, 'CLP' ) ) . '</td><td data-label="Estado">' . esc_html( Inmo_Arriendos::ESTADOS_COBRO[ $k->estado ] ) . '</td></tr>';
 				}
 				$h .= '</tbody></table></div>';
 			}

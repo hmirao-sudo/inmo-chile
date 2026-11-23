@@ -25,6 +25,12 @@ class Inmo_Propiedades {
 		add_filter( 'wp_insert_post_data', array( __CLASS__, 'forzar_estado_publicacion' ), 20, 2 );
 		add_action( 'save_post_' . INMO_CPT, array( __CLASS__, 'asegurar_codigo' ), 5, 1 );
 		add_action( 'before_delete_post', array( __CLASS__, 'al_borrar' ) );
+		// Una propiedad vendida/arrendada queda privada: sin el prefijo «Privado:» en contratos, liquidaciones y portal.
+		add_filter( 'private_title_format', array( __CLASS__, 'titulo_privado' ), 10, 2 );
+	}
+
+	public static function titulo_privado( $formato, $post ) {
+		return ( $post && INMO_CPT === get_post_type( $post ) ) ? '%s' : $formato;
 	}
 
 	public static function registrar() {

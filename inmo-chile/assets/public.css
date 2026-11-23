@@ -1,0 +1,27 @@
+/* Inmo Chile — estructura mínima de formularios (el tema aplica la estética) */
+.inmo-hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+.inmo-form{display:grid;gap:14px}
+.inmo-campo{display:flex;flex-direction:column;gap:4px}
+.inmo-campo--checkbox{flex-direction:row;align-items:flex-start;gap:8px}
+.inmo-campo--checkbox input{margin-top:.25em;width:1.1em;height:1.1em;flex:none}
+.inmo-campo input:not([type=checkbox]):not([type=radio]),.inmo-campo select,.inmo-campo textarea{font:inherit;padding:.6em .7em;border:1px solid #8a8f98;border-radius:6px;width:100%;box-sizing:border-box;background:#fff;color:inherit}
+.inmo-campo--error input,.inmo-campo--error select,.inmo-campo--error textarea{border-color:#b3261e;border-width:2px}
+.inmo-error{color:#b3261e;margin:0;font-size:.92em}
+.inmo-ayuda,.inmo-opc{color:#555;font-size:.9em;margin:0;font-weight:400}
+.inmo-req{color:#b3261e}
+.inmo-fila{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.inmo-paso{border:0;padding:0;margin:0;display:grid;gap:12px}
+.inmo-paso legend{font-weight:700;font-size:1.1em;margin-bottom:8px;padding:0}
+.inmo-radios,.inmo-checks{display:flex;flex-wrap:wrap;gap:8px}
+.inmo-radio,.inmo-check{display:flex;gap:6px;align-items:center;border:1px solid #8a8f98;border-radius:999px;padding:.45em .9em;cursor:pointer}
+.inmo-radio:has(input:checked){outline:2px solid currentColor}
+.inmo-alerta{border-radius:8px;padding:12px 16px;margin-bottom:14px}
+.inmo-alerta p{margin:.3em 0}
+.inmo-alerta--ok{background:#e6f4ea;border:1px solid #2e7d32}
+.inmo-alerta--error{background:#fdecea;border:1px solid #b3261e}
+.inmo-alerta:focus{outline:3px solid #1a73e8;outline-offset:2px}
+.inmo-tabs{display:flex;gap:4px;border-bottom:2px solid #ddd;margin-bottom:14px}
+.inmo-tabs [role=tab]{font:inherit;background:none;border:0;border-bottom:3px solid transparent;padding:.6em .8em;margin-bottom:-2px;cursor:pointer;color:inherit}
+.inmo-tabs [role=tab][aria-selected=true]{border-bottom-color:currentColor;font-weight:700}
+.inmo-nota{font-size:.92em;color:#444;margin:0}
+.inmo-panel-titulo{margin:0 0 6px;font-size:1.1em}

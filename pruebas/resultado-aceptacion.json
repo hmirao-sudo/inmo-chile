@@ -1,0 +1,167 @@
+[
+  {
+    "nombre": "1.1 La entrega crea una captación con código",
+    "ok": true,
+    "detalle": "CP-0003"
+  },
+  {
+    "nombre": "1.2 La captación queda en revisión y no publicada",
+    "ok": true,
+    "detalle": "en_revision/pending"
+  },
+  {
+    "nombre": "1.3 La propietaria quedó como titular",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "1.4 Se entrega un enlace individual con vencimiento",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "1.5 La propietaria completa la ficha y envía 2 fotos",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "1.6 El enlace no se puede reutilizar",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "1.7 Las fotos quedan pendientes y fuera de la galería pública",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "1.8 Antes de aprobarse NO aparece al filtrar arriendos en Ñuñoa",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "1.9 La ficha en revisión no es accesible al público",
+    "ok": true,
+    "detalle": "HTTP 404"
+  },
+  {
+    "nombre": "1.10 Tras aprobarse queda Disponible y publicada",
+    "ok": true,
+    "detalle": "Propiedad Disponible y publicada en el sitio. Ver ficha pública Post updated. Connection lost. Saving has been disabled "
+  },
+  {
+    "nombre": "1.11 Solo las fotos autorizadas pasan a la galería",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "1.12 Aparece al filtrar arriendos de Ñuñoa",
+    "ok": true,
+    "detalle": "/propiedades/?operacion=arriendo&comuna=nunoa → 1 resultado(s), $550.000 / mes"
+  },
+  {
+    "nombre": "1.13 El visitante ve el precio y solo las fotos autorizadas",
+    "ok": true,
+    "detalle": "2 fotos"
+  },
+  {
+    "nombre": "1.14 La ficha pública no expone dirección, titular, RUT ni mandato",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "1.15 «Volver a los resultados» conserva los filtros",
+    "ok": true,
+    "detalle": "/propiedades/?operacion=arriendo&comuna=nunoa"
+  },
+  {
+    "nombre": "1.16 Regla: admin y corredora responsable pueden abrir el mandato; otro corredor y visitantes no",
+    "ok": true,
+    "detalle": "{\"admin\":{\"puede_abrir_documento\":true,\"puede_editar_propiedad\":true},\"camila.rojas\":{\"puede_abrir_documento\":true,\"puede_editar_propiedad\":true},\"diego.munoz\":{\"puede_abrir_documento\":false,\"puede_editar_propiedad\":false},\"anonimo\":{\"puede_abrir_documento\":false}}"
+  },
+  {
+    "nombre": "1.17 Endpoint de descarga: la corredora responsable obtiene el PDF",
+    "ok": true,
+    "detalle": "{\"http\":200,\"bytes\":646,\"es_pdf\":true}"
+  },
+  {
+    "nombre": "1.17b El enlace del mandato en la ficha interna de la corredora descarga el PDF",
+    "ok": true,
+    "detalle": "HTTP 200"
+  },
+  {
+    "nombre": "1.18 Endpoint de descarga: otro corredor recibe 403 aun con un nonce válido",
+    "ok": true,
+    "detalle": "{\"http\":403,\"mensaje\":\"No tienes permiso para abrir este documento.\"}"
+  },
+  {
+    "nombre": "1.19 Otro corredor no puede abrir la ficha interna",
+    "ok": true,
+    "detalle": "HTTP 500 (mensaje de WordPress)"
+  },
+  {
+    "nombre": "1.20 Visitante sin sesión no obtiene el mandato",
+    "ok": true,
+    "detalle": "HTTP 400"
+  },
+  {
+    "nombre": "2.1 Consulta por el depto de Ñuñoa: confirma y lleva el código",
+    "ok": true,
+    "detalle": "Recibimos tu consulta por la propiedad CP-0003. Un corredor te responderá a joaquin.fuente"
+  },
+  {
+    "nombre": "2.2 Consulta por otra propiedad (CP-0002)",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "2.3 La visita queda PENDIENTE y se explica qué ocurrirá",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "2.4 El CRM conserva UN contacto",
+    "ok": true,
+    "detalle": "1 contacto(s)"
+  },
+  {
+    "nombre": "2.5 …con sus consultas por dos inmuebles",
+    "ok": true,
+    "detalle": "CP-0003, CP-0002"
+  },
+  {
+    "nombre": "2.6 Roles derivados: arrendatario",
+    "ok": true,
+    "detalle": "arrendatario"
+  },
+  {
+    "nombre": "2.7 La ficha del contacto muestra el historial por inmueble",
+    "ok": true,
+    "detalle": "CP-0003 — Departamento en arriendo en Ñuñoa | CP-0002 — Departamento luminoso a pasos del metro en Providencia"
+  },
+  {
+    "nombre": "2.8 Un corredor sin relación no ve el contacto",
+    "ok": true,
+    "detalle": "HTTP 403"
+  },
+  {
+    "nombre": "2.9 La corredora confirma la visita desde la ficha",
+    "ok": true,
+    "detalle": "confirmada 2026-11-26 17:30:00"
+  },
+  {
+    "nombre": "2.10 …o la reprograma",
+    "ok": true,
+    "detalle": "reprogramada 2026-11-27 11:00:00"
+  },
+  {
+    "nombre": "2.11 La ficha interna sigue en Disponible (la corredora no cambió el estado al guardar)",
+    "ok": true,
+    "detalle": ""
+  },
+  {
+    "nombre": "2.12 Caso sin resultados ofrece quitar filtros y dejar una consulta general",
+    "ok": true,
+    "detalle": ""
+  }
+]

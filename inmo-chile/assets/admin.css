@@ -1,0 +1,50 @@
+/* Inmo Chile — admin */
+.inmo-wrap .inmo-kpis{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
+.inmo-kpi{flex:1 1 180px;background:#fff;border:1px solid #dcdcde;border-radius:6px;padding:14px 16px;text-decoration:none;color:#1d2327}
+.inmo-kpi strong{display:block;font-size:28px;line-height:1.1;color:#1f4e5f}
+.inmo-columnas{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:16px}
+.inmo-columnas--ficha{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.inmo-caja{background:#fff;border:1px solid #dcdcde;border-radius:6px;padding:4px 16px 16px}
+.inmo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 18px}
+.inmo-grid p{margin:6px 0}
+.inmo-grid label,.inmo-privado label{display:block;font-weight:600;margin-bottom:2px}
+.inmo-grid input[type=text],.inmo-grid input[type=number],.inmo-grid input[type=email],.inmo-grid input[type=tel],.inmo-grid input[type=date],.inmo-grid select{width:100%;max-width:100%}
+#inmo_precio{width:60%}#inmo_moneda{width:35%}
+.inmo-grid fieldset{grid-column:1/-1}
+.inmo-subtitulo{grid-column:1/-1;margin:18px 0 6px;padding-top:10px;border-top:1px solid #eee;font-size:14px}
+.inmo-inline{display:inline-block;margin:4px 14px 4px 0}
+.inmo-privado{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 18px;background:#fff8e5;border:1px solid #f0d58c;border-radius:6px;padding:8px 12px}
+.inmo-privado .inmo-candado,.inmo-privado .description{grid-column:1/-1;margin:4px 0}
+.inmo-equip{margin-top:12px}
+.inmo-galeria{display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:8px 0;padding:0}
+.inmo-galeria li{position:relative;width:150px;margin:0;cursor:move}
+.inmo-galeria li img{display:block;width:150px;height:150px;object-fit:cover;border-radius:4px}
+.inmo-galeria li:first-child:not(.inmo-galeria--pend li)::after{content:"Portada";position:absolute;left:6px;top:6px;background:#1f4e5f;color:#fff;font-size:11px;padding:2px 6px;border-radius:3px}
+.inmo-galeria--pend li{cursor:default}
+.inmo-galeria--pend label{display:block;margin-top:4px}
+.inmo-quitar{position:absolute;right:4px;top:4px;border:0;background:#b32d2e;color:#fff;border-radius:50%;width:24px;height:24px;cursor:pointer;line-height:1}
+.inmo-estado-box select{margin-top:2px}
+.inmo-botones{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.inmo-codigo{font-size:14px}
+.inmo-resumen{margin:0}
+.inmo-resumen li{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid #f0f0f1;padding:5px 0}
+.inmo-resumen li>span:first-child{flex:0 0 90px;color:#646970}
+.inmo-canal{display:inline-block;font-size:12px;border-radius:3px;padding:1px 6px;margin:1px 0}
+.inmo-canal.is-on{background:#d7f0dd;color:#0a5b1f}.inmo-canal.is-off{background:#f0f0f1;color:#50575e}
+.inmo-faltan{background:#fcf0f1;border-left:4px solid #d63638;padding:6px 8px}
+.inmo-badge{display:inline-block;border-radius:10px;padding:2px 8px;font-size:12px;background:#f0f0f1;white-space:nowrap}
+.inmo-badge--disponible,.inmo-badge--confirmada,.inmo-badge--atendida,.inmo-badge--realizada{background:#d7f0dd;color:#0a5b1f}
+.inmo-badge--en_revision,.inmo-badge--pendiente,.inmo-badge--nueva,.inmo-badge--reprogramada{background:#fcf3d7;color:#7a5800}
+.inmo-badge--reservada{background:#e0ecf8;color:#1d4f7a}
+.inmo-badge--vendida,.inmo-badge--arrendada,.inmo-badge--archivada,.inmo-badge--cancelada,.inmo-badge--descartada{background:#eee;color:#555}
+.inmo-ctrl{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.inmo-ctrl input[type=text]{width:140px}
+.inmo-historial{margin-left:1.4em}
+.inmo-historial li{margin-bottom:4px}
+.inmo-historial time{color:#646970;font-variant-numeric:tabular-nums}
+.inmo-filtros{margin:12px 0;display:flex;gap:6px;flex-wrap:wrap}
+.inmo-ayuda-editor{margin:14px 0 4px}
+.column-inmo_foto{width:70px}.column-inmo_foto img{border-radius:3px;object-fit:cover}
+.column-inmo_codigo{width:80px}
+.inmo-agregar{margin:10px 0}
+.inmo-agregar summary{cursor:pointer;font-weight:600}
